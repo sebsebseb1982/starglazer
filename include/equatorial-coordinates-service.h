@@ -5,17 +5,7 @@
 #include <HTTPClient.h>
 #include <ArduinoJson.h>
 #include <gps.h>
-
-class TrackedObject {
-private:
-
-public:
-  String type;
-  String name;
-  TrackedObject(
-    String type,
-    String name);
-};
+#include "tracked-object.h"
 
 class EquatorialCoordinates {
 private:

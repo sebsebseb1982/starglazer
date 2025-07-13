@@ -32,11 +32,11 @@ EquatorialCoordinates EquatorialCoordinatesService::compute(GPSData gpsData, Tra
   homeAssistantURL += F("/");
   homeAssistantURL += trackedObject.name;
   homeAssistantURL += F("?latitude=");
-  homeAssistantURL += gpsData.getLatitudeInDegrees();
+  homeAssistantURL += gpsData.latitudeInDegrees;
   homeAssistantURL += F("&longitude=");
-  homeAssistantURL += gpsData.getLongitudeInDegrees();
+  homeAssistantURL += gpsData.longitudeInDegrees;
   homeAssistantURL += F("&elevation=");
-  homeAssistantURL += gpsData.getElevation();
+  homeAssistantURL += gpsData.elevation;
   Serial.println("A1");
   this->http.end();
   this->http.begin(homeAssistantURL);

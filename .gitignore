@@ -32,3 +32,5 @@ __pycache__/
 *.swp
 
 secrets.h
+CMakeLists.txt
+sdkconfig.esp32dev

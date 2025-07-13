@@ -1,3 +1,6 @@
+#include "esp_log.h"
+#include "esp_task_wdt.h"
+
 #include <TFT_eSPI.h>
 TFT_eSPI tft = TFT_eSPI();
 
@@ -5,20 +8,19 @@ TFT_eSPI tft = TFT_eSPI();
 #include "gps.h"
 #include "display.h"
 #include "buzzer.h"
-#include "esp_task_wdt.h"
 #include "wifi-connection.h"
+#include "current-view-service.h"
 
 Screen screen(&tft);
-GPS gps = GPS();
 Display display(&tft);
+CurrentViewService currentViewService = CurrentViewService(&tft);
 
 TaskHandle_t highPriorityTask;
 TaskHandle_t lowPriorityTask;
 
 void highPriorityLoop(void* pvParameters) {
   while (1) {
-    //Serial.println("highPriorityLoop()");
-    gps.loop();
+    GPS::loop();
     vTaskDelay(1);
   }
   vTaskDelete(NULL);
@@ -36,28 +38,27 @@ void lowPriorityLoop(void* pvParameters) {
   esp_task_wdt_add(NULL);
 */
   while (1) {
-    Serial.println("lowPriorityLoop()");
     WiFiConnection::loop();
     screen.loop();
-    display.loop(gps.currentData);
+    currentViewService.loop();    
+    //display.loop(gps.currentData);
 
     //  esp_task_wdt_reset();
     vTaskDelay(100 / portTICK_PERIOD_MS);
   }
-  esp_task_wdt_delete(NULL);
   vTaskDelete(NULL);
 }
 
 void setup() {
   Serial.begin(115200);
   Serial.println("setup()");
-
   Buzzer::setup();
   Buzzer::off();
   WiFiConnection::setup();
   screen.setup();
-  gps.setup();
-  display.setup();
+  GPS::setup();
+  currentViewService.setup();
+  //display.setup();
 
   xTaskCreatePinnedToCore(
     highPriorityLoop,   /* Task function. */

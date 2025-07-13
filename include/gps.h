@@ -4,34 +4,29 @@
 
 class GPSData {
   private:
+
+  public:
     float latitudeInDegrees;
     float longitudeInDegrees;
     float elevation;
-  public:
+    boolean isValid;
     GPSData();
     GPSData(
       float latitudeInDegrees,
       float longitudeInDegrees,
-      float elevation
+      float elevation,
+      boolean isValid
     );
-    float getLatitudeInDegrees();
-    float getLongitudeInDegrees();
-    float getLatitudeInRadians();
-    float getLongitudeInRadians();
-    float getElevation();
-    void setup();
-    void loop();
 };
 
 class GPS {
   private:
-    TinyGPSPlus gps;
+  
   public:
-    GPS();
-    GPSData currentData;
-    bool ready;
-    void setup();
-    void loop();
+    static TinyGPSPlus gps;
+    static GPSData currentData;
+    static void setup();
+    static void loop();
 };
 
 #endif

@@ -1,4 +1,5 @@
 #include "screen.h"
+#include "colors.h"
 
 #define pwmChannel 0    //Choisit le canal 0
 #define frequence 1000  //Fréquence PWM de 1 KHz
@@ -13,9 +14,9 @@ Screen::Screen(TFT_eSPI *screen) {
 void Screen::setup() {
   screen->init();
   screen->begin();
-  screen->fillScreen(0);
+  screen->fillScreen(BACKGROUND_COLOR);
   screen->setRotation(1);
-  //screen->setTextColor(WHITE, BACKGROUND_COLOR);
+  screen->setTextColor(WHITE, BACKGROUND_COLOR);
   screen->setTextDatum(4);
   //ledcAttachChannel(pwmPin, frequence, resolution, pwmChannel);
   //ledcWrite(pwmChannel, 255);

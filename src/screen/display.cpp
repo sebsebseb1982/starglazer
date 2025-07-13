@@ -20,15 +20,15 @@ void Display::loop(GPSData gpsData) {
 
   String latitude;
   latitude += F("Lat:");
-  latitude += String(gpsData.getLatitudeInDegrees(), 7);
+  latitude += String(gpsData.latitudeInDegrees, 7);
 
   String longitude;
   longitude += F("Lon:");
-  longitude += String(gpsData.getLongitudeInDegrees(), 7);
+  longitude += String(gpsData.longitudeInDegrees, 7);
 
   String elevation;
   elevation += F("Elevation:");
-  elevation += String(gpsData.getElevation(), 7);
+  elevation += String(gpsData.elevation, 7);
 
   TrackedObject trackedObject = TrackedObject(F("planets-and-moons"), F("sun"));
 
