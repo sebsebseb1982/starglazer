@@ -6,13 +6,11 @@ TFT_eSPI tft = TFT_eSPI();
 
 #include "screen.h"
 #include "gps.h"
-#include "display.h"
 #include "buzzer.h"
 #include "wifi-connection.h"
 #include "current-view-service.h"
 
 Screen screen(&tft);
-Display display(&tft);
 CurrentViewService currentViewService = CurrentViewService(&tft);
 
 TaskHandle_t highPriorityTask;
@@ -41,9 +39,7 @@ void lowPriorityLoop(void* pvParameters) {
     WiFiConnection::loop();
     screen.loop();
     currentViewService.loop();    
-    //display.loop(gps.currentData);
 
-    //  esp_task_wdt_reset();
     vTaskDelay(100 / portTICK_PERIOD_MS);
   }
   vTaskDelete(NULL);
@@ -58,7 +54,6 @@ void setup() {
   screen.setup();
   GPS::setup();
   currentViewService.setup();
-  //display.setup();
 
   xTaskCreatePinnedToCore(
     highPriorityLoop,   /* Task function. */

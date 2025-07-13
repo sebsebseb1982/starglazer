@@ -23,23 +23,23 @@ EquatorialCoordinatesService::EquatorialCoordinatesService()
   this->http.setTimeout(5000);
 }
 
-EquatorialCoordinates EquatorialCoordinatesService::compute(GPSData gpsData, TrackedObject trackedObject) {
+EquatorialCoordinates EquatorialCoordinatesService::compute(GPSData gpsData, TrackedObject *trackedObject) {
   Serial.println("A");
 
-  String homeAssistantURL;
-  homeAssistantURL += F("http://192.168.1.169:22666/horizontal-coordinates/");
-  homeAssistantURL += trackedObject.type;
-  homeAssistantURL += F("/");
-  homeAssistantURL += trackedObject.name;
-  homeAssistantURL += F("?latitude=");
-  homeAssistantURL += gpsData.latitudeInDegrees;
-  homeAssistantURL += F("&longitude=");
-  homeAssistantURL += gpsData.longitudeInDegrees;
-  homeAssistantURL += F("&elevation=");
-  homeAssistantURL += gpsData.elevation;
+  String skyfieldAPIURL;
+  skyfieldAPIURL += F("http://192.168.1.169:22666/horizontal-coordinates/");
+  skyfieldAPIURL += trackedObject->type;
+  skyfieldAPIURL += F("/");
+  skyfieldAPIURL += trackedObject->name;
+  skyfieldAPIURL += F("?latitude=");
+  skyfieldAPIURL += gpsData.latitudeInDegrees;
+  skyfieldAPIURL += F("&longitude=");
+  skyfieldAPIURL += gpsData.longitudeInDegrees;
+  skyfieldAPIURL += F("&elevation=");
+  skyfieldAPIURL += gpsData.elevation;
   Serial.println("A1");
   this->http.end();
-  this->http.begin(homeAssistantURL);
+  this->http.begin(skyfieldAPIURL);
   Serial.println("A2");
   int httpCode;
   int retry = 0;

@@ -27,7 +27,7 @@ private:
   HTTPClient http;
 public:
   EquatorialCoordinatesService();
-  EquatorialCoordinates compute(GPSData gpsData, TrackedObject trackedObject);
+  EquatorialCoordinates compute(GPSData gpsData, TrackedObject *trackedObject);
 };
 
 #endif
