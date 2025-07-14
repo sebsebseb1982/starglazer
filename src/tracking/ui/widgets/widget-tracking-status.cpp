@@ -52,7 +52,7 @@ void WidgetTrackingStatus::draw()
   String distance;
   distance += F("Distance: ");
   distance += String(currentEquatorialCoordinates.distance / 1000000, 0);
-  distance += F(" million km");
+  distance += F(" x 10^6 km");
   screen->setCursor(x + textMarginX, y + textMarginY + 40);
   screen->print(distance);
 
