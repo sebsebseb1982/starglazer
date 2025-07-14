@@ -34,3 +34,4 @@ __pycache__/
 secrets.h
 CMakeLists.txt
 sdkconfig.esp32dev
+build
