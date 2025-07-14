@@ -8,6 +8,7 @@ class WiFiConnection {
     static unsigned int nbConnection;
     static void setup();
     static void loop();
+    static boolean isConnected();
 };
 
 #endif

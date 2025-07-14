@@ -28,3 +28,7 @@ void WiFiConnection::loop() {
     setup();
   }
 }
+
+boolean WiFiConnection::isConnected() {
+  return WiFi.status() == WL_CONNECTED;
+}
