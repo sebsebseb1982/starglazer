@@ -20,6 +20,7 @@ public:
   static uint16_t y;
   static boolean isTouched;
   static void setup(TFT_eSPI *screen);
+  static void loop();
 };
 
 #endif

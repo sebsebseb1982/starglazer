@@ -55,6 +55,7 @@ void setup() {
   screen.setup();
   GPS::setup();
   currentViewService.setup();
+  
 /*
   
   xTaskCreatePinnedToCore(
@@ -75,11 +76,13 @@ void setup() {
     &lowPriorityTask,  
     1);                
 */
+  Serial.println("Application ready !");
 }
 
 void loop() {
       WiFiConnection::loop();
           GPS::loop();
+          TouchScreen::loop();
     screen.loop();
     currentViewService.loop();    
 }

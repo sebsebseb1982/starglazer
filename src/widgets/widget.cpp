@@ -60,12 +60,22 @@ void Widget::refresh() {
 
   touchStatus = isTouched();
   if (previousTouchStatus != touchStatus && touchStatus) {
+    /*String message;
+    message += F("Button ");
+    message += label;
+    message += F(" pushed");
+    Serial.println(message);*/
     manageTouchDown();
   }
   /*if (touchStatus) {
     manageTouch();
     }*/
   if (previousTouchStatus != touchStatus && !touchStatus) {
+    /*String message;
+    message += F("Button ");
+    message += label;
+    message += F(" released");
+    Serial.println(message);*/
     manageTouchUp();
   }
   previousTouchStatus = touchStatus;
