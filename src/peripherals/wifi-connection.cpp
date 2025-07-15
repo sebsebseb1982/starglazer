@@ -5,7 +5,7 @@
 unsigned int WiFiConnection::nbConnection = 0;
 
 void WiFiConnection::setup() {
-  Serial.print("WiFiConnection::setup()");
+  Serial.println("WiFiConnection::setup()");
   WiFi.begin(WIFI_SSID, WIFI_PASSWORD);
   int retry = 0; 
   while (WiFi.status() != WL_CONNECTED) {
@@ -18,7 +18,6 @@ void WiFiConnection::setup() {
     //Serial.print(".");
   }
   nbConnection++;
-  Serial.println("");
   Serial.print("Connecté au WIFI avec l'adresse IP : ");
   Serial.println(WiFi.localIP());
 }

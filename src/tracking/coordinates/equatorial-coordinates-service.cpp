@@ -24,7 +24,6 @@ EquatorialCoordinatesService::EquatorialCoordinatesService()
 }
 
 EquatorialCoordinates EquatorialCoordinatesService::compute(GPSData gpsData, TrackedObject *trackedObject) {
-  Serial.println("A");
 
   String skyfieldAPIURL;
   skyfieldAPIURL += F("http://192.168.1.169:22666/horizontal-coordinates/");
@@ -37,35 +36,26 @@ EquatorialCoordinates EquatorialCoordinatesService::compute(GPSData gpsData, Tra
   skyfieldAPIURL += gpsData.longitudeInDegrees;
   skyfieldAPIURL += F("&elevation=");
   skyfieldAPIURL += gpsData.elevation;
-  Serial.println("A1");
   this->http.end();
   this->http.begin(skyfieldAPIURL);
-  Serial.println("A2");
   int httpCode;
   int retry = 0;
 
   do {
-    Serial.println("A3");
-    yield();
+    //yield();
     httpCode = this->http.GET();
     retry++;
-    Serial.println("B");
   } while (httpCode <= 0 && retry < HTTP_RETRY);
 
   if (httpCode > 0) {
-    Serial.println("C");
     String response = this->http.getString();
-    Serial.println("C1");
     this->http.end();
-    Serial.println("C2");
     DeserializationError error = deserializeJson(this->doc, response);
     if (error) {
       Serial.print(F("deserializeJson() failed: "));
       Serial.println(error.c_str());
-      Serial.println("D");
       return EquatorialCoordinates();
     }
-    Serial.println("C3");
     return EquatorialCoordinates(
       this->doc["altitude"],
       this->doc["azimuth"],
@@ -76,8 +66,6 @@ EquatorialCoordinates EquatorialCoordinatesService::compute(GPSData gpsData, Tra
     error += F("KO -> code erreur = ");
     error += String(httpCode);
     Serial.println(error);
-    Serial.println("");
-    Serial.println("E");
     this->http.end();
     return EquatorialCoordinates();
   }

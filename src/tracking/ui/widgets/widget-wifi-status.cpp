@@ -19,8 +19,6 @@ WidgetWifiStatus::WidgetWifiStatus(
 
 void WidgetWifiStatus::draw()
 {
-  Serial.println("WidgetWifiStatus::draw()");
-
   gui.drawButton(
       x,
       y,

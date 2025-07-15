@@ -19,18 +19,14 @@ Widget::Widget(
 }
 
 void Widget::init() {
-  Serial.println("Widget::init()");
   refreshValue();
   draw();
 }
 
 void Widget::refresh() {
-  Serial.println("Widget::refresh() start");
   currentMillis = millis();
   boolean valueRefreshed = false;
   unsigned long refreshValueDurationInMs = 0;
-  Serial.println(currentMillis - startMillis);
-  Serial.println(refreshPeriodInMs);
   if (currentMillis - startMillis >= refreshPeriodInMs) {
     refreshValue();
     /*

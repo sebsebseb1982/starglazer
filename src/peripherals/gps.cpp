@@ -18,7 +18,8 @@ GPSData GPS::currentData;
 
 void GPS::setup()
 {
-  Serial2.begin(9600, SERIAL_8N1, 0, 4);
+  //Serial2.begin(9600, SERIAL_8N1, 0, 4);
+  Serial2.begin(115200, SERIAL_8N1, 0, 4);
 }
 
 void GPS::loop()
@@ -27,11 +28,8 @@ void GPS::loop()
   {
     if (GPS::gps.encode(Serial2.read()))
     {
-      Serial.println("GPS::loop() C");
       if (GPS::gps.location.isValid() && GPS::gps.altitude.isValid())
       {
-        Serial.print("GPS::loop() D ");
-        Serial.println(gps.location.lat());
         GPS::currentData = GPSData(
             gps.location.lat(),
             gps.location.lng(),
@@ -47,34 +45,6 @@ void GPS::loop()
             0,
             false);
       }
-      /*
-            Serial.print(F("- speed: "));
-            if (GPS::gps.speed.isValid()) {
-              Serial.print(GPS::gps.speed.kmph());
-              Serial.println(F(" km/h"));
-            } else {
-              Serial.println(F("INVALID"));
-            }
-
-            Serial.print(F("- GPS date&time: "));
-            if (GPS::gps.date.isValid() && GPS::gps.time.isValid()) {
-              Serial.print(GPS::gps.date.year());
-              Serial.print(F("-"));
-              Serial.print(GPS::gps.date.month());
-              Serial.print(F("-"));
-              Serial.print(GPS::gps.date.day());
-              Serial.print(F(" "));
-              Serial.print(GPS::gps.time.hour());
-              Serial.print(F(":"));
-              Serial.print(GPS::gps.time.minute());
-              Serial.print(F(":"));
-              Serial.println(GPS::gps.time.second());
-            } else {
-              Serial.println(F("INVALID"));
-            }
-
-            Serial.println();
-            */
     }
   }
 

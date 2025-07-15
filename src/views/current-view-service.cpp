@@ -16,6 +16,5 @@ void CurrentViewService::setup()
 
 void CurrentViewService::loop()
 {
-    Serial.println("CurrentViewService::loop()");
     this->currentView->loop();
 }

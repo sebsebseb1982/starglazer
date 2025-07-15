@@ -18,8 +18,6 @@ WidgetGPSStatus::WidgetGPSStatus(
 
 void WidgetGPSStatus::draw()
 {
-  Serial.println("WidgetGPSStatus::draw()");
-
   gui.drawButton(
       x,
       y,
@@ -75,19 +73,12 @@ void WidgetGPSStatus::draw()
 
 void WidgetGPSStatus::refreshValue()
 {
-  Serial.print("WidgetGPSStatus::refreshValue()");
   this->currentGPSData = GPS::currentData;
-  Serial.println(this->currentGPSData.latitudeInDegrees);
 }
 
 boolean WidgetGPSStatus::isValueChanged()
 {
-  Serial.print("WidgetGPSStatus::isValueChanged() = ");
-
   boolean isGPSDataChanged = previousGPSData.latitudeInDegrees != currentGPSData.latitudeInDegrees || previousGPSData.longitudeInDegrees != currentGPSData.longitudeInDegrees || previousGPSData.elevation != currentGPSData.elevation || previousGPSData.isValid != currentGPSData.isValid;
-
-  Serial.println(isGPSDataChanged);
-
   return isGPSDataChanged;
 }
 

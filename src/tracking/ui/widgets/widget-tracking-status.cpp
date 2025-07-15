@@ -23,8 +23,6 @@ WidgetTrackingStatus::WidgetTrackingStatus(
 
 void WidgetTrackingStatus::draw()
 {
-  Serial.println("WidgetTrackingStatus::draw()");
-
   gui.drawButton(
       x,
       y,
@@ -61,7 +59,6 @@ void WidgetTrackingStatus::draw()
 
 void WidgetTrackingStatus::refreshValue()
 {
-  Serial.print("WidgetTrackingStatus::refreshValue()");
   this->currentEquatorialCoordinates = this->equatorialCoordinatesService->compute(
       GPS::currentData,
       this->trackedObject);

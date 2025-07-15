@@ -9,14 +9,16 @@ TFT_eSPI tft = TFT_eSPI();
 #include "buzzer.h"
 #include "wifi-connection.h"
 #include "current-view-service.h"
+#include "touch-screen.h"
 
 Screen screen(&tft);
 CurrentViewService currentViewService = CurrentViewService(&tft);
 
-TaskHandle_t highPriorityTask;
+TaskHandle_t gpsUpdateTask;
 TaskHandle_t lowPriorityTask;
+TaskHandle_t touchScreenObserveTask;
 
-void highPriorityLoop(void* pvParameters) {
+void gpsUpdateLoop(void* pvParameters) {
   while (1) {
     GPS::loop();
     vTaskDelay(1);
@@ -39,8 +41,6 @@ void lowPriorityLoop(void* pvParameters) {
     WiFiConnection::loop();
     screen.loop();
     currentViewService.loop();    
-
-    vTaskDelay(100 / portTICK_PERIOD_MS);
   }
   vTaskDelete(NULL);
 }
@@ -50,30 +50,36 @@ void setup() {
   Serial.println("setup()");
   Buzzer::setup();
   Buzzer::off();
+  TouchScreen::setup(&tft);
   WiFiConnection::setup();
   screen.setup();
   GPS::setup();
   currentViewService.setup();
+/*
+  
+  xTaskCreatePinnedToCore(
+    gpsUpdateLoop,   
+    "gpsUpdateTask", 
+    10000,              
+    NULL,               
+    5,                  
+    &gpsUpdateTask,  
+    0);                 
 
   xTaskCreatePinnedToCore(
-    highPriorityLoop,   /* Task function. */
-    "highPriorityTask", /* name of task. */
-    10000,              /* Stack size of task */
-    NULL,               /* parameter of the task */
-    2,                  /* priority of the task */
-    &highPriorityTask,  /* Task handle to keep track of created task */
-    0);                 /* pin task to core 0 */
-
-  //create a task that will be executed in the Task2code() function, with priority 1 and executed on core 1
-  xTaskCreatePinnedToCore(
-    lowPriorityLoop,   /* Task function. */
-    "lowPriorityTask", /* name of task. */
-    10000,             /* Stack size of task */
-    NULL,              /* parameter of the task */
-    1,                 /* priority of the task */
-    &lowPriorityTask,  /* Task handle to keep track of created task */
-    1);                /* pin task to core 1 */
+    lowPriorityLoop,   
+    "lowPriorityTask", 
+    10000,             
+    NULL,              
+    5,                 
+    &lowPriorityTask,  
+    1);                
+*/
 }
 
 void loop() {
+      WiFiConnection::loop();
+          GPS::loop();
+    screen.loop();
+    currentViewService.loop();    
 }

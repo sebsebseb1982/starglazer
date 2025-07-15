@@ -15,7 +15,6 @@ TrackingObjectView::TrackingObjectView(
 
 void TrackingObjectView::setup()
 {
-    Serial.println("TrackingObjectView::setup()");
     this->widgets[0] = new WidgetGPSStatus(4, 0, "GPS", this->screen, FIVE_SECONDS);
     this->widgets[1] = new WidgetTrackingButton(4, 2, "Tracking", this->screen, FIVE_SECONDS);
     this->widgets[2] = new WidgetTrackingStatus(0, 1, "Tracked object status", this->screen, &this->trackedObject, &this->equatorialCoordinatesService, FIVE_SECONDS);
@@ -29,7 +28,6 @@ void TrackingObjectView::setup()
 
 void TrackingObjectView::loop()
 {
-    Serial.println("TrackingObjectView::loop()");
     for (int i = 0; i < widgetNumbers; i++)
     {
         if (this->widgets[i])
