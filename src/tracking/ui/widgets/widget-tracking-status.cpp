@@ -36,20 +36,41 @@ void WidgetTrackingStatus::draw()
 
   String altitude;
   altitude += F("Altitude: ");
-  altitude += String(trackingObjectService->currentEquatorialCoordinates.altitude, 1);
+  if (trackingObjectService->isTracking)
+  {
+    altitude += String(trackingObjectService->currentEquatorialCoordinates.altitude, 1);
+  }
+  else
+  {
+    altitude += "waiting ...";
+  }
   screen->setCursor(x + textMarginX, y + textMarginY);
   screen->print(altitude);
 
   String azimuth;
   azimuth += F("Azimuth: ");
-  azimuth += String(trackingObjectService->currentEquatorialCoordinates.azimuth, 1);
+  if (trackingObjectService->isTracking)
+  {
+    azimuth += String(trackingObjectService->currentEquatorialCoordinates.azimuth, 1);
+  }
+  else
+  {
+    azimuth += "waiting ...";
+  }
   screen->setCursor(x + textMarginX, y + textMarginY + 20);
   screen->print(azimuth);
 
   String distance;
   distance += F("Distance: ");
-  distance += String(trackingObjectService->currentEquatorialCoordinates.distance / 1000000, 0);
-  distance += F(" x 10^6 km");
+  if (trackingObjectService->isTracking)
+  {
+    distance += String(trackingObjectService->currentEquatorialCoordinates.distance / 1000000, 0);
+    distance += F(" x 10^6 km");
+  }
+  else
+  {
+    distance += "waiting ...";
+  }
   screen->setCursor(x + textMarginX, y + textMarginY + 40);
   screen->print(distance);
 
@@ -70,10 +91,8 @@ boolean WidgetTrackingStatus::isValueChanged()
   int currentEquatorialCoordinatesAltitude = round(trackingObjectService->currentEquatorialCoordinates.altitude * 10);
   int currentEquatorialCoordinatesDistance = trackingObjectService->currentEquatorialCoordinates.distance / 1000000;
 
-  boolean isEquatorialCoordinatesChanged = 
-    previousEquatorialCoordinatesAzimuth != currentEquatorialCoordinatesAzimuth 
-    || previousEquatorialCoordinatesAltitude != currentEquatorialCoordinatesAltitude 
-    || previousEquatorialCoordinatesDistance != currentEquatorialCoordinatesDistance;
+  boolean isEquatorialCoordinatesChanged =
+      previousEquatorialCoordinatesAzimuth != currentEquatorialCoordinatesAzimuth || previousEquatorialCoordinatesAltitude != currentEquatorialCoordinatesAltitude || previousEquatorialCoordinatesDistance != currentEquatorialCoordinatesDistance;
 
   return isEquatorialCoordinatesChanged;
 }

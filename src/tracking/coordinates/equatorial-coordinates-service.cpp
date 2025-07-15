@@ -20,7 +20,6 @@ EquatorialCoordinatesService::EquatorialCoordinatesService()
 }
 
 EquatorialCoordinates EquatorialCoordinatesService::compute(GPSData gpsData, TrackedObject *trackedObject) {
-
   String skyfieldAPIURL;
   skyfieldAPIURL += F("http://192.168.1.169:22666/horizontal-coordinates/");
   skyfieldAPIURL += trackedObject->type;

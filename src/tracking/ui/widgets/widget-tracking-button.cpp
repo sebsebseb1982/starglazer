@@ -59,6 +59,7 @@ void WidgetTrackingButton::manageTouchDown() {
 
 void WidgetTrackingButton::manageTouchUp() {
   value = !value;
+  this->trackingObjectService->isTracking=value;
   buttonStatus = value ? ACTIVATED : DESACTIVATED;
   draw();
 
