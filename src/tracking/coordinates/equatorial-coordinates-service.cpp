@@ -1,10 +1,6 @@
 #include "equatorial-coordinates-service.h"
 #define HTTP_RETRY 10
 
-TrackedObject::TrackedObject(String type, String name)
-  : type(type), name(name) {
-}
-
 EquatorialCoordinates::EquatorialCoordinates() {
 }
 

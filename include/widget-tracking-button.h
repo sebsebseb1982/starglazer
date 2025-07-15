@@ -2,6 +2,7 @@
 #include <TFT_eSPI.h>
 
 #include "widget.h"
+#include "tracking-object-service.h"
 
 class WidgetTrackingButton : public Widget {
   private:
@@ -9,12 +10,15 @@ class WidgetTrackingButton : public Widget {
     boolean previousValue;
     ButtonStatus buttonStatus;
     ButtonStatus previousButtonStatus;
+    TrackingObjectService *trackingObjectService;
+
   public:
     WidgetTrackingButton(
       unsigned int column,
       unsigned int row,
       String label,
       TFT_eSPI *screen,
+      TrackingObjectService *trackingObjectService,
       unsigned long refreshPeriodInMs
     );
     void draw();

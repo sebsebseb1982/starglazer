@@ -4,14 +4,14 @@
 #include "widget.h"
 #include "equatorial-coordinates-service.h"
 #include "tracked-object.h"
+#include "tracking-object-service.h"
 
 class WidgetTrackingStatus : public Widget
 {
 private:
-  EquatorialCoordinates currentEquatorialCoordinates;
   EquatorialCoordinates previousEquatorialCoordinates;
-  EquatorialCoordinatesService *equatorialCoordinatesService;
   TrackedObject *trackedObject;
+  TrackingObjectService *trackingObjectService;
 
 public:
   WidgetTrackingStatus(
@@ -20,7 +20,7 @@ public:
       String label,
       TFT_eSPI *screen,
       TrackedObject *trackedObject,
-      EquatorialCoordinatesService *equatorialCoordinatesService,
+      TrackingObjectService *trackingObjectService,
       unsigned long refreshPeriodInMs);
   void draw() override;
   void refreshValue() override;

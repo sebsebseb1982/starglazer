@@ -8,17 +8,42 @@
 
 TrackingObjectView::TrackingObjectView(
     TFT_eSPI *screen,
-    TrackedObject trackedObject) : trackedObject(trackedObject), equatorialCoordinatesService()
+    TrackedObject *trackedObject) : trackedObject(trackedObject)
 {
     this->screen = screen;
+    this->trackingObjectService = new TrackingObjectService(trackedObject);
 }
 
 void TrackingObjectView::setup()
 {
-    this->widgets[0] = new WidgetGPSStatus(4, 0, "GPS", this->screen, FIVE_SECONDS);
-    this->widgets[1] = new WidgetTrackingButton(4, 2, "Tracking", this->screen, FIVE_SECONDS);
-    this->widgets[2] = new WidgetTrackingStatus(0, 1, "Tracked object status", this->screen, &this->trackedObject, &this->equatorialCoordinatesService, FIVE_SECONDS);
-    this->widgets[3] = new WidgetWifiStatus(5, 2, "Wifi", this->screen, ONE_SECOND);
+    trackingObjectService->setup(trackedObject);
+    this->widgets[0] = new WidgetGPSStatus(
+        4,
+        0,
+        "GPS",
+        this->screen,
+        FIVE_SECONDS);
+    this->widgets[1] = new WidgetTrackingButton(
+        4,
+        2,
+        "Tracking",
+        this->screen,
+        this->trackingObjectService,
+        FIVE_SECONDS);
+    this->widgets[2] = new WidgetTrackingStatus(
+        0,
+        1,
+        "Tracked object status",
+        this->screen,
+        this->trackedObject,
+        this->trackingObjectService,
+        FIVE_SECONDS);
+    this->widgets[3] = new WidgetWifiStatus(
+        5,
+        2,
+        "Wifi",
+        this->screen,
+        ONE_SECOND);
 
     for (int i = 0; i < widgetNumbers; i++)
     {
@@ -28,6 +53,7 @@ void TrackingObjectView::setup()
 
 void TrackingObjectView::loop()
 {
+    trackingObjectService->loop();
     for (int i = 0; i < widgetNumbers; i++)
     {
         if (this->widgets[i])

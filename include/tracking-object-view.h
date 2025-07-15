@@ -3,21 +3,24 @@
 #include "view.h"
 #include "tracked-object.h"
 #include "widget.h"
-#include "equatorial-coordinates-service.h"
+#include "tracking-object-service.h"
 
 #define widgetNumbers 4
 
-class TrackingObjectView : public View {
-  private:
-    TFT_eSPI *screen;
-    TrackedObject trackedObject;
-    Widget *widgets[widgetNumbers];
-    EquatorialCoordinatesService equatorialCoordinatesService;
+class TrackingObjectView : public View
+{
+private:
+  TFT_eSPI *screen;
+  TrackedObject *trackedObject;
+  Widget *widgets[widgetNumbers];
+  TrackingObjectService *trackingObjectService;
 
-  public:
-    TrackingObjectView(TFT_eSPI *screen, TrackedObject trackedObject);
-    void setup();
-    void loop();
+public:
+  TrackingObjectView(
+      TFT_eSPI *screen,
+      TrackedObject *trackedObject);
+  void setup();
+  void loop();
 };
 
 #endif

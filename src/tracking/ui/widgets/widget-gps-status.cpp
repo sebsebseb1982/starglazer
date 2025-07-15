@@ -35,6 +35,8 @@ void WidgetGPSStatus::draw()
   if (currentGPSData.isValid)
   {
     latitude += String(currentGPSData.latitudeInDegrees, 5);
+  }else {
+    latitude += "waiting ...";
   }
   screen->setCursor(x + textMarginX, y + textMarginY);
   screen->print(latitude);
@@ -44,6 +46,8 @@ void WidgetGPSStatus::draw()
   if (currentGPSData.isValid)
   {
     longitude += String(currentGPSData.longitudeInDegrees, 5);
+  } else {
+    longitude += "waiting ...";
   }
   screen->setCursor(x + textMarginX, y + textMarginY + 20);
   screen->print(longitude);
@@ -54,6 +58,8 @@ void WidgetGPSStatus::draw()
   {
     elevation += String(currentGPSData.elevation, 0);
     elevation += F(" m");
+  }else {
+    elevation += "waiting ...";
   }
   screen->setCursor(x + textMarginX, y + textMarginY + 40);
   screen->print(elevation);

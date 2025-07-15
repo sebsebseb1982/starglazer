@@ -56,7 +56,7 @@ void setup() {
   GPS::setup();
   currentViewService.setup();
   
-/*
+
   
   xTaskCreatePinnedToCore(
     gpsUpdateLoop,   
@@ -66,7 +66,7 @@ void setup() {
     5,                  
     &gpsUpdateTask,  
     0);                 
-
+/*
   xTaskCreatePinnedToCore(
     lowPriorityLoop,   
     "lowPriorityTask", 
