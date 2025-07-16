@@ -12,6 +12,8 @@ private:
   EquatorialCoordinates previousEquatorialCoordinates;
   TrackedObject *trackedObject;
   TrackingObjectService *trackingObjectService;
+  void drawAzimuthCompass(unsigned int x, unsigned int y);
+  void drawAltitudeChart(unsigned int x, unsigned int y);
 
 public:
   WidgetTrackingStatus(

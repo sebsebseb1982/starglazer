@@ -1,7 +1,7 @@
 #include "widget-tracking-status.h"
 #include "gui.h"
 #include "colors.h"
-#include "image-satellite.h"
+#include "image-compass.h"
 
 WidgetTrackingStatus::WidgetTrackingStatus(
     unsigned int column,
@@ -35,7 +35,7 @@ void WidgetTrackingStatus::draw()
   screen->setTextFont(2);
 
   String altitude;
-  altitude += F("Altitude: ");
+  altitude += F("Altitude : ");
   if (trackingObjectService->isTracking)
   {
     altitude += String(trackingObjectService->currentEquatorialCoordinates.altitude, 1);
@@ -48,7 +48,7 @@ void WidgetTrackingStatus::draw()
   screen->print(altitude);
 
   String azimuth;
-  azimuth += F("Azimuth: ");
+  azimuth += F("Azimuth : ");
   if (trackingObjectService->isTracking)
   {
     azimuth += String(trackingObjectService->currentEquatorialCoordinates.azimuth, 1);
@@ -61,7 +61,7 @@ void WidgetTrackingStatus::draw()
   screen->print(azimuth);
 
   String distance;
-  distance += F("Distance: ");
+  distance += F("Distance : ");
   if (trackingObjectService->isTracking)
   {
     distance += String(trackingObjectService->currentEquatorialCoordinates.distance / 1000000, 0);
@@ -74,7 +74,55 @@ void WidgetTrackingStatus::draw()
   screen->setCursor(x + textMarginX, y + textMarginY + 40);
   screen->print(distance);
 
+  if (trackingObjectService->isTracking)
+  {
+    drawAzimuthCompass(x + 250, y + 54);
+    drawAltitudeChart(x + 250, y + 5);
+  }
+
   previousEquatorialCoordinates = trackingObjectService->currentEquatorialCoordinates;
+}
+
+void WidgetTrackingStatus::drawAzimuthCompass(unsigned int x, unsigned int y)
+{
+  uint32_t compassColor = VERY_LIGHT_GRAY;
+  int compassSize = 48;
+  screen->drawBitmap(
+      x,
+      y,
+      compass48x48,
+      compassSize,
+      compassSize,
+      compassColor);
+
+  float angle = (360.0 - trackingObjectService->currentEquatorialCoordinates.azimuth) + 90.0;
+
+  screen->drawLine(
+      x + compassSize / 2,
+      y + compassSize / 2,
+      x + compassSize / 2 + cos(angle * PI / 180.0) * ((compassSize * 1.0) / 3.0),
+      y + compassSize / 2 - sin(angle * PI / 180.0) * ((compassSize * 1.0) / 3.0),
+      GREEN);
+}
+
+void WidgetTrackingStatus::drawAltitudeChart(unsigned int x, unsigned int y)
+{
+  uint32_t chartColor = VERY_LIGHT_GRAY;
+  int compassSize = 48;
+  screen->drawBitmap(
+      x,
+      y,
+      compass48x48,
+      compassSize,
+      compassSize,
+      chartColor);
+
+  screen->drawLine(
+      x + compassSize / 2,
+      y + compassSize / 2,
+      x + compassSize / 2 + cos(trackingObjectService->currentEquatorialCoordinates.altitude * PI / 180.0) * ((compassSize * 1.0) / 3.0),
+      y + compassSize / 2 - sin(trackingObjectService->currentEquatorialCoordinates.altitude * PI / 180.0) * ((compassSize * 1.0) / 3.0),
+      GREEN);
 }
 
 void WidgetTrackingStatus::refreshValue()
