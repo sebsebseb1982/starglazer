@@ -83,6 +83,8 @@ void Widget::refresh() {
 }
 
 boolean Widget::isTouched() {
+  Serial.print("Widget::isTouched() ");
+  Serial.println(label);
   return TouchScreen::isTouched
          && TouchScreen::x >= x
          && TouchScreen::x < x + BUTTON_SIZE

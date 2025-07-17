@@ -18,15 +18,18 @@ TaskHandle_t gpsUpdateTask;
 TaskHandle_t lowPriorityTask;
 TaskHandle_t touchScreenObserveTask;
 
-void gpsUpdateLoop(void* pvParameters) {
-  while (1) {
+void gpsUpdateLoop(void *pvParameters)
+{
+  while (1)
+  {
     GPS::loop();
     vTaskDelay(1);
   }
   vTaskDelete(NULL);
 }
 
-void lowPriorityLoop(void* pvParameters) {
+void lowPriorityLoop(void *pvParameters)
+{
   /*
   esp_task_wdt_config_t wdt_config = {
     .timeout_ms = 10000,          // Timeout en millisecondes
@@ -37,15 +40,17 @@ void lowPriorityLoop(void* pvParameters) {
 
   esp_task_wdt_add(NULL);
 */
-  while (1) {
+  while (1)
+  {
     WiFiConnection::loop();
     screen.loop();
-    currentViewService.loop();    
+    currentViewService.loop();
   }
   vTaskDelete(NULL);
 }
 
-void setup() {
+void setup()
+{
   Serial.begin(115200);
   Serial.println("setup()");
   Buzzer::setup();
@@ -55,34 +60,33 @@ void setup() {
   screen.setup();
   GPS::setup();
   currentViewService.setup();
-  
 
-  
   xTaskCreatePinnedToCore(
-    gpsUpdateLoop,   
-    "gpsUpdateTask", 
-    10000,              
-    NULL,               
-    5,                  
-    &gpsUpdateTask,  
-    0);                 
-/*
-  xTaskCreatePinnedToCore(
-    lowPriorityLoop,   
-    "lowPriorityTask", 
-    10000,             
-    NULL,              
-    5,                 
-    &lowPriorityTask,  
-    1);                
-*/
+      gpsUpdateLoop,
+      "gpsUpdateTask",
+      10000,
+      NULL,
+      5,
+      &gpsUpdateTask,
+      0);
+  /*
+    xTaskCreatePinnedToCore(
+      lowPriorityLoop,
+      "lowPriorityTask",
+      10000,
+      NULL,
+      5,
+      &lowPriorityTask,
+      1);
+  */
   Serial.println("Application ready !");
 }
 
-void loop() {
-      WiFiConnection::loop();
-          GPS::loop();
-          TouchScreen::loop();
-    screen.loop();
-    currentViewService.loop();    
+void loop()
+{
+  WiFiConnection::loop();
+  //GPS::loop();
+  TouchScreen::loop();
+  screen.loop();
+  currentViewService.loop();
 }

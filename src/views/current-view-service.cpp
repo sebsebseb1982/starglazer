@@ -8,11 +8,13 @@ CurrentViewService::CurrentViewService(TFT_eSPI *screen)
 
 void CurrentViewService::setup()
 {
-    this->currentView = new TrackingObjectView(this->screen, new TrackedObject(F("planets-and-moons"), F("moon")));
+    this->currentView = new TrackingObjectView(this->screen, new TrackedObject(F("planets-and-moons"), F("sun")));
     this->currentView->setup();
 }
 
 void CurrentViewService::loop()
 {
+    Serial.println("CurrentViewService::loop() start");
     this->currentView->loop();
+    Serial.println("CurrentViewService::loop() end");
 }

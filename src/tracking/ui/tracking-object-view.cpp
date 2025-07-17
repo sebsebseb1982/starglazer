@@ -37,7 +37,7 @@ void TrackingObjectView::setup()
         this->screen,
         this->trackedObject,
         this->trackingObjectService,
-        FIVE_SECONDS);
+        THIRTHY_SECONDS);
     this->widgets[3] = new WidgetWifiStatus(
         5,
         2,
