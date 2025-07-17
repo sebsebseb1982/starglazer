@@ -8,7 +8,6 @@ WidgetTrackingButton::WidgetTrackingButton(
   unsigned int row,
   String label,
   TFT_eSPI *screen,
-  TrackingObjectService *trackingObjectService,
   unsigned long refreshPeriodInMs
 ) : Widget(
     column,
@@ -17,7 +16,6 @@ WidgetTrackingButton::WidgetTrackingButton(
     screen,
     refreshPeriodInMs
   ) {
-    this->trackingObjectService = trackingObjectService;
 }
 
 void WidgetTrackingButton::draw() {
@@ -39,7 +37,7 @@ void WidgetTrackingButton::draw() {
 }
 
 void WidgetTrackingButton::refreshValue() {
-  value = this->trackingObjectService->isTracking;
+  value = TrackingObjectService::isTracking;
   if (!isTouched()) {
     buttonStatus = value ? ACTIVATED : DESACTIVATED;
   }
@@ -59,7 +57,7 @@ void WidgetTrackingButton::manageTouchDown() {
 
 void WidgetTrackingButton::manageTouchUp() {
   value = !value;
-  this->trackingObjectService->isTracking=value;
+  TrackingObjectService::isTracking=value;
   buttonStatus = value ? ACTIVATED : DESACTIVATED;
   draw();
 

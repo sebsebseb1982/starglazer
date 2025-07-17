@@ -13,14 +13,12 @@ WidgetTrackingStatus::WidgetTrackingStatus(
     String label,
     TFT_eSPI *screen,
     TrackedObject *trackedObject,
-    TrackingObjectService *trackingObjectService,
     unsigned long refreshPeriodInMs) : Widget(column,
                                               row,
                                               label,
                                               screen,
                                               refreshPeriodInMs)
 {
-  this->trackingObjectService = trackingObjectService;
   this->trackedObject = trackedObject;
 }
 
@@ -97,7 +95,7 @@ void WidgetTrackingStatus::draw()
       VERY_LIGHT_GRAY);
   drawDistanceStatus(x + 250, y + 10);
 
-  previousEquatorialCoordinates = trackingObjectService->currentEquatorialCoordinates;
+  previousEquatorialCoordinates = TrackingObjectService::currentEquatorialCoordinates;
 }
 
 void WidgetTrackingStatus::drawAzimuthStatus(unsigned int x, unsigned int y)
@@ -107,9 +105,9 @@ void WidgetTrackingStatus::drawAzimuthStatus(unsigned int x, unsigned int y)
   drawAzimuthCompass(x + 9, y + STATUS_CHART_Y);
 
   String value;
-  if (trackingObjectService->isTracking)
+  if (TrackingObjectService::isTracking)
   {
-    value += String(trackingObjectService->currentEquatorialCoordinates.azimuth, 1);
+    value += String(TrackingObjectService::currentEquatorialCoordinates.azimuth, 1);
   }
   else
   {
@@ -126,9 +124,9 @@ void WidgetTrackingStatus::drawAltitudeStatus(unsigned int x, unsigned int y)
   drawAltitudeChart(x + 35, y + STATUS_CHART_Y);
 
   String value;
-  if (trackingObjectService->isTracking)
+  if (TrackingObjectService::isTracking)
   {
-    value += String(trackingObjectService->currentEquatorialCoordinates.altitude, 1);
+    value += String(TrackingObjectService::currentEquatorialCoordinates.altitude, 1);
   }
   else
   {
@@ -154,7 +152,7 @@ void WidgetTrackingStatus::drawAzimuthCompass(unsigned int x, unsigned int y)
       compassSize,
       compassColor);
 
-  float angle = (360.0 - trackingObjectService->currentEquatorialCoordinates.azimuth) + 90.0;
+  float angle = (360.0 - TrackingObjectService::currentEquatorialCoordinates.azimuth) + 90.0;
 
   screen->drawLine(
       x + compassSize / 2,
@@ -208,8 +206,8 @@ void WidgetTrackingStatus::drawAltitudeChart(unsigned int x, unsigned int y)
   screen->drawLine(
       x,
       y + compassSize / 2,
-      x + cos(trackingObjectService->currentEquatorialCoordinates.altitude * PI / 180.0) * lineSize,
-      y + compassSize / 2 - sin(trackingObjectService->currentEquatorialCoordinates.altitude * PI / 180.0) * lineSize,
+      x + cos(TrackingObjectService::currentEquatorialCoordinates.altitude * PI / 180.0) * lineSize,
+      y + compassSize / 2 - sin(TrackingObjectService::currentEquatorialCoordinates.altitude * PI / 180.0) * lineSize,
       GREEN);
 }
 
@@ -223,9 +221,9 @@ boolean WidgetTrackingStatus::isValueChanged()
   int previousEquatorialCoordinatesAltitude = round(previousEquatorialCoordinates.altitude * 10);
   int previousEquatorialCoordinatesDistance = previousEquatorialCoordinates.distance / 1000000;
 
-  int currentEquatorialCoordinatesAzimuth = round(trackingObjectService->currentEquatorialCoordinates.azimuth * 10);
-  int currentEquatorialCoordinatesAltitude = round(trackingObjectService->currentEquatorialCoordinates.altitude * 10);
-  int currentEquatorialCoordinatesDistance = trackingObjectService->currentEquatorialCoordinates.distance / 1000000;
+  int currentEquatorialCoordinatesAzimuth = round(TrackingObjectService::currentEquatorialCoordinates.azimuth * 10);
+  int currentEquatorialCoordinatesAltitude = round(TrackingObjectService::currentEquatorialCoordinates.altitude * 10);
+  int currentEquatorialCoordinatesDistance = TrackingObjectService::currentEquatorialCoordinates.distance / 1000000;
 
   boolean isEquatorialCoordinatesChanged =
       previousEquatorialCoordinatesAzimuth != currentEquatorialCoordinatesAzimuth || previousEquatorialCoordinatesAltitude != currentEquatorialCoordinatesAltitude || previousEquatorialCoordinatesDistance != currentEquatorialCoordinatesDistance;

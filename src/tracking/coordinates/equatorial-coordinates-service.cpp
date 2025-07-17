@@ -14,7 +14,7 @@ EquatorialCoordinates::EquatorialCoordinates(
 }
 
 EquatorialCoordinatesService::EquatorialCoordinatesService()
-  : doc(2048) {
+  : doc() {
   this->http.setConnectTimeout(2000);
   this->http.setTimeout(5000);
 }

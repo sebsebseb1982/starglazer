@@ -13,7 +13,6 @@ private:
   TFT_eSPI *screen;
   TrackedObject *trackedObject;
   Widget *widgets[widgetNumbers];
-  TrackingObjectService *trackingObjectService;
 
 public:
   TrackingObjectView(

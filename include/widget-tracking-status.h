@@ -11,7 +11,6 @@ class WidgetTrackingStatus : public Widget
 private:
   EquatorialCoordinates previousEquatorialCoordinates;
   TrackedObject *trackedObject;
-  TrackingObjectService *trackingObjectService;
   void drawAzimuthStatus(unsigned int x, unsigned int y);
   void drawAzimuthCompass(unsigned int x, unsigned int y);
 
@@ -27,7 +26,6 @@ public:
       String label,
       TFT_eSPI *screen,
       TrackedObject *trackedObject,
-      TrackingObjectService *trackingObjectService,
       unsigned long refreshPeriodInMs);
   void draw() override;
   void refreshValue() override;

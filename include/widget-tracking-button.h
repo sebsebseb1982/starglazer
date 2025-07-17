@@ -10,7 +10,6 @@ class WidgetTrackingButton : public Widget {
     boolean previousValue;
     ButtonStatus buttonStatus;
     ButtonStatus previousButtonStatus;
-    TrackingObjectService *trackingObjectService;
 
   public:
     WidgetTrackingButton(
@@ -18,7 +17,6 @@ class WidgetTrackingButton : public Widget {
       unsigned int row,
       String label,
       TFT_eSPI *screen,
-      TrackingObjectService *trackingObjectService,
       unsigned long refreshPeriodInMs
     );
     void draw();

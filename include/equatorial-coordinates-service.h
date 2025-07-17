@@ -23,7 +23,7 @@ public:
 
 class EquatorialCoordinatesService {
 private:
-  DynamicJsonDocument doc;
+  JsonDocument doc;
   HTTPClient http;
 public:
   EquatorialCoordinatesService();

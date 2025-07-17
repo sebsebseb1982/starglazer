@@ -1,19 +1,27 @@
 #include "tracking-object-service.h"
 
-TrackingObjectService::TrackingObjectService(TrackedObject *trackedObject) : trackedObject(trackedObject), equatorialCoordinatesService()
+TrackedObject* TrackingObjectService::trackedObject = nullptr;
+
+EquatorialCoordinates TrackingObjectService::currentEquatorialCoordinates;
+boolean TrackingObjectService::isTracking = false;
+
+EquatorialCoordinatesService &TrackingObjectService::equatorialCoordinatesService = getEquatorialCoordinatesServiceInstance();
+
+EquatorialCoordinatesService &TrackingObjectService::getEquatorialCoordinatesServiceInstance()
 {
-    isTracking = false;
+    static EquatorialCoordinatesService instance;
+    return instance;
 }
 
 void TrackingObjectService::setup(TrackedObject *trackedObject)
 {
-    this->trackedObject = trackedObject;
-    isTracking = true;
+    TrackingObjectService::trackedObject = trackedObject;
+    TrackingObjectService::isTracking = true;
 }
 
 void TrackingObjectService::loop()
 {
-    currentEquatorialCoordinates = equatorialCoordinatesService.compute(
+    TrackingObjectService::currentEquatorialCoordinates = TrackingObjectService::equatorialCoordinatesService.compute(
         GPS::currentData,
-        this->trackedObject);
+        TrackingObjectService::trackedObject);
 }

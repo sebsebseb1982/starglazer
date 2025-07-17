@@ -11,12 +11,11 @@ TrackingObjectView::TrackingObjectView(
     TrackedObject *trackedObject) : trackedObject(trackedObject)
 {
     this->screen = screen;
-    this->trackingObjectService = new TrackingObjectService(trackedObject);
 }
 
 void TrackingObjectView::setup()
 {
-    trackingObjectService->setup(trackedObject);
+    TrackingObjectService::setup(trackedObject);
     this->widgets[0] = new WidgetGPSStatus(
         4,
         0,
@@ -28,7 +27,6 @@ void TrackingObjectView::setup()
         2,
         "Tracking",
         this->screen,
-        this->trackingObjectService,
         FIVE_SECONDS);
     this->widgets[2] = new WidgetTrackingStatus(
         0,
@@ -36,7 +34,6 @@ void TrackingObjectView::setup()
         "Tracked object status",
         this->screen,
         this->trackedObject,
-        this->trackingObjectService,
         THIRTHY_SECONDS);
     this->widgets[3] = new WidgetWifiStatus(
         5,
@@ -53,7 +50,7 @@ void TrackingObjectView::setup()
 
 void TrackingObjectView::loop()
 {
-    trackingObjectService->loop();
+    TrackingObjectService::loop();
     for (int i = 0; i < widgetNumbers; i++)
     {
         if (this->widgets[i])

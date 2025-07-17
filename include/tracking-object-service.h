@@ -8,15 +8,15 @@
 class TrackingObjectService
 {
 private:
-    TrackedObject *trackedObject;
-    EquatorialCoordinatesService equatorialCoordinatesService;
+    static TrackedObject *trackedObject;
+    static EquatorialCoordinatesService &equatorialCoordinatesService;
+    static EquatorialCoordinatesService &getEquatorialCoordinatesServiceInstance();
 
 public:
-    EquatorialCoordinates currentEquatorialCoordinates;
-    boolean isTracking;
-    TrackingObjectService(TrackedObject *trackedObject);
-    void setup(TrackedObject *trackedObject);
-    void loop();
+    static EquatorialCoordinates currentEquatorialCoordinates;
+    static boolean isTracking;
+    static void setup(TrackedObject *trackedObject);
+    static void loop();
 };
 
 #endif
