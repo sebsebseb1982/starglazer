@@ -5,7 +5,7 @@ TrackedObject *TrackingObjectService::trackedObject = nullptr;
 
 EquatorialCoordinates TrackingObjectService::currentEquatorialCoordinates;
 boolean TrackingObjectService::isTracking = false;
-
+boolean TrackingObjectService::isLaserPointingWanted = true;
 EquatorialCoordinatesService &TrackingObjectService::equatorialCoordinatesService = getEquatorialCoordinatesServiceInstance();
 
 EquatorialCoordinatesService &TrackingObjectService::getEquatorialCoordinatesServiceInstance()

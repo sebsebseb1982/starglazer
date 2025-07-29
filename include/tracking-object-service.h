@@ -16,6 +16,7 @@ private:
 public:
     static EquatorialCoordinates currentEquatorialCoordinates;
     static boolean isTracking;
+    static boolean isLaserPointingWanted;
     static void setup(TrackedObject *trackedObject);
     static void loop();
 };

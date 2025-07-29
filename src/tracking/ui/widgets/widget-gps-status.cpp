@@ -90,15 +90,12 @@ boolean WidgetGPSStatus::isValueChanged()
 
 void WidgetGPSStatus::manageTouch()
 {
-  // Serial.println("WidgetGPSStatus::manageTouch()");
 }
 
 void WidgetGPSStatus::manageTouchDown()
 {
-  // Serial.println("WidgetGPSStatus::manageTouchDown()");
 }
 
 void WidgetGPSStatus::manageTouchUp()
 {
-  // Serial.println("WidgetGPSStatus::manageTouchUp()");
 }

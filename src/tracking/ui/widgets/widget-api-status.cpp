@@ -1,10 +1,10 @@
-#include "widget-wifi-status.h"
+#include "widget-api-status.h"
 #include "gui.h"
 #include "colors.h"
-#include "image-wifi.h"
+#include "image-cog.h"
 #include "wifi-connection.h"
 
-WidgetWifiStatus::WidgetWifiStatus(
+WidgetAPIStatus::WidgetAPIStatus(
     unsigned int column,
     unsigned int row,
     String label,
@@ -17,7 +17,7 @@ WidgetWifiStatus::WidgetWifiStatus(
 {
 }
 
-void WidgetWifiStatus::draw()
+void WidgetAPIStatus::draw()
 {
   gui.drawButton(
       x,
@@ -36,32 +36,32 @@ void WidgetWifiStatus::draw()
   screen->drawBitmap(
     x + (BUTTON_SIZE - ICON_SIZE) / 2,
     y + ((BUTTON_SIZE - ICON_SIZE) / 2) - 8,
-      wifi32x32,
+      cog32x32,
       imageSize,
       imageSize,
-      currentWifiStatus ? GREEN : ORANGE);
+      GREEN);
 
-  previousWifiStatus = currentWifiStatus;
+  previousAPIStatus = currentAPIStatus;
 }
 
-void WidgetWifiStatus::refreshValue()
+void WidgetAPIStatus::refreshValue()
 {
-  this->currentWifiStatus = WiFiConnection::isConnected;
+  this->currentAPIStatus = WiFiConnection::isConnected;
 }
 
-boolean WidgetWifiStatus::isValueChanged()
+boolean WidgetAPIStatus::isValueChanged()
 {
-  return currentWifiStatus != previousWifiStatus;
+  return currentAPIStatus != previousAPIStatus;
 }
 
-void WidgetWifiStatus::manageTouch()
-{
-}
-
-void WidgetWifiStatus::manageTouchDown()
+void WidgetAPIStatus::manageTouch()
 {
 }
 
-void WidgetWifiStatus::manageTouchUp()
+void WidgetAPIStatus::manageTouchDown()
+{
+}
+
+void WidgetAPIStatus::manageTouchUp()
 {
 }

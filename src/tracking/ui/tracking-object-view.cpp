@@ -5,6 +5,9 @@
 #include "widget-tracking-button.h"
 #include "widget-tracking-status.h"
 #include "widget-wifi-status.h"
+#include "widget-api-status.h"
+#include "widget-laser-button.h"
+#include "widget-tracked-object-button.h"
 
 TrackingObjectView::TrackingObjectView(
     TFT_eSPI *screen,
@@ -41,6 +44,25 @@ void TrackingObjectView::setup()
         "Wifi",
         this->screen,
         ONE_SECOND);
+    this->widgets[4] = new WidgetAPIStatus(
+        5,
+        3,
+        "API",
+        this->screen,
+        FIVE_SECONDS);
+    this->widgets[5] = new WidgetLaserButton(
+        4,
+        3,
+        "Laser",
+        this->screen,
+        HUNDRED_MILLISECONDS);
+    this->widgets[6] = new WidgetTrackedObjectButton(
+        0,
+        0,
+        "Tracked object",
+        this->screen,
+        this->trackedObject,
+        THREE_HOURS);
 
     for (int i = 0; i < widgetNumbers; i++)
     {
@@ -50,7 +72,6 @@ void TrackingObjectView::setup()
 
 void TrackingObjectView::loop()
 {
-    Serial.println("TrackingObjectView::loop()");
     TrackingObjectService::loop();
     for (int i = 0; i < widgetNumbers; i++)
     {

@@ -1,9 +1,10 @@
-#include "widget-tracking-button.h"
+#include "widget-laser-button.h"
 #include "gui.h"
 #include "colors.h"
-#include "image-target.h"
+#include "image-laser.h"
+#include "tracking-object-service.h"
 
-WidgetTrackingButton::WidgetTrackingButton(
+WidgetLaserButton::WidgetLaserButton(
   unsigned int column,
   unsigned int row,
   String label,
@@ -18,7 +19,7 @@ WidgetTrackingButton::WidgetTrackingButton(
   ) {
 }
 
-void WidgetTrackingButton::draw() {
+void WidgetLaserButton::draw() {
   gui.drawToggleButton(
     x,
     y,
@@ -28,7 +29,7 @@ void WidgetTrackingButton::draw() {
   screen->drawBitmap(
     x + (BUTTON_SIZE - ICON_SIZE) / 2,
     y + ((BUTTON_SIZE - ICON_SIZE) / 2) - 8,
-    target32x32,
+    laser32x32,
     32,
     32,
     WHITE
@@ -36,26 +37,26 @@ void WidgetTrackingButton::draw() {
   previousValue = value;
 }
 
-void WidgetTrackingButton::refreshValue() {
-  value = TrackingObjectService::isTracking;
+void WidgetLaserButton::refreshValue() {
+  value = TrackingObjectService::isTracking && TrackingObjectService::isLaserPointingWanted;
   if (!isTouched()) {
     buttonStatus = value ? ACTIVATED : DESACTIVATED;
   }
 }
 
-boolean WidgetTrackingButton::isValueChanged() {
+boolean WidgetLaserButton::isValueChanged() {
   return value != previousValue;
 }
 
-void WidgetTrackingButton::manageTouch() {
+void WidgetLaserButton::manageTouch() {
 }
 
-void WidgetTrackingButton::manageTouchDown() {
+void WidgetLaserButton::manageTouchDown() {
 }
 
-void WidgetTrackingButton::manageTouchUp() {
+void WidgetLaserButton::manageTouchUp() {
   value = !value;
-  TrackingObjectService::isTracking=value;
+  TrackingObjectService::isLaserPointingWanted=value;
   buttonStatus = value ? ACTIVATED : DESACTIVATED;
   draw();
 }
