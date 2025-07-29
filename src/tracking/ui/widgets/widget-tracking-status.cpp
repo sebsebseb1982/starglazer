@@ -2,6 +2,7 @@
 #include "gui.h"
 #include "colors.h"
 #include "image-compass.h"
+#include "image-distance.h"
 
 #define STATUS_TITLE_Y 10
 #define STATUS_CHART_Y 40
@@ -93,7 +94,7 @@ void WidgetTrackingStatus::draw()
       x + 214,
       y + separatorYStop,
       VERY_LIGHT_GRAY);
-  drawDistanceStatus(x + 250, y + 10);
+  drawDistanceStatus(x + 230, y + 10);
 
   previousEquatorialCoordinates = TrackingObjectService::currentEquatorialCoordinates;
 }
@@ -113,7 +114,7 @@ void WidgetTrackingStatus::drawAzimuthStatus(unsigned int x, unsigned int y)
   {
     value += "waiting ...";
   }
-  screen->setCursor(x + 20, y + STATUS_VALUE_Y);
+  screen->setCursor(x + 15, y + STATUS_VALUE_Y);
   screen->print(value);
 }
 
@@ -132,12 +133,41 @@ void WidgetTrackingStatus::drawAltitudeStatus(unsigned int x, unsigned int y)
   {
     value += "waiting ...";
   }
-  screen->setCursor(x + 20, y + STATUS_VALUE_Y);
+  screen->setCursor(x + 24, y + STATUS_VALUE_Y);
   screen->print(value);
 }
 
 void WidgetTrackingStatus::drawDistanceStatus(unsigned int x, unsigned int y)
 {
+  screen->setCursor(x + 14, y + STATUS_TITLE_Y);
+  screen->print("Distance");
+  drawDistanceChart(x + 14, y + STATUS_CHART_Y);
+
+  String value;
+  if (TrackingObjectService::isTracking)
+  {
+    value += String(TrackingObjectService::currentEquatorialCoordinates.distance/1000000, 0);
+    value += "M km";
+  }
+  else
+  {
+    value += "waiting ...";
+  }
+  screen->setCursor(x + 13, y + STATUS_VALUE_Y);
+  screen->print(value);
+}
+
+void WidgetTrackingStatus::drawDistanceChart(unsigned int x, unsigned int y)
+{
+  uint32_t chartColor = VERY_LIGHT_GRAY;
+  int chartSize = 48;
+  screen->drawBitmap(
+      x,
+      y,
+      distance48x48,
+      chartSize,
+      chartSize,
+      chartColor);
 }
 
 void WidgetTrackingStatus::drawAzimuthCompass(unsigned int x, unsigned int y)

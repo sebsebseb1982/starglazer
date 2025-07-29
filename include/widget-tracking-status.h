@@ -18,6 +18,7 @@ private:
   void drawAltitudeChart(unsigned int x, unsigned int y);
 
   void drawDistanceStatus(unsigned int x, unsigned int y);
+  void drawDistanceChart(unsigned int x, unsigned int y);
 
 public:
   WidgetTrackingStatus(
