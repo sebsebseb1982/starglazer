@@ -11,6 +11,7 @@ private:
     static TrackedObject *trackedObject;
     static EquatorialCoordinatesService &equatorialCoordinatesService;
     static EquatorialCoordinatesService &getEquatorialCoordinatesServiceInstance();
+    static unsigned long startMillis;
 
 public:
     static EquatorialCoordinates currentEquatorialCoordinates;

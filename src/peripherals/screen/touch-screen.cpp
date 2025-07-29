@@ -20,14 +20,15 @@ void TouchScreen::setup(TFT_eSPI *screen)
 
 void IRAM_ATTR TouchScreen::onTouchEvent()
 {
-  touchFlag = true;  // Set flag for main loop
+  touchFlag = true; // Set flag for main loop
 }
+
 
 void TouchScreen::loop()
 {
   static unsigned long lastChange = 0;
   static bool lastState = HIGH;
-
+  Serial.println("A");
   if (!touchFlag)
     return;
 
@@ -35,12 +36,12 @@ void TouchScreen::loop()
 
   unsigned long now = millis();
   bool reading = digitalRead(PEN_PIN);
-
+  Serial.println("B");
   if (reading != lastState && (now - lastChange) > TouchScreen::debounceDelay)
   {
     lastChange = now;
     lastState = reading;
-
+    Serial.println("C");
     if (reading == LOW)
     {
       // Touch detected

@@ -27,7 +27,7 @@ void TrackingObjectView::setup()
         2,
         "Tracking",
         this->screen,
-        FIVE_SECONDS);
+        HUNDRED_MILLISECONDS);
     this->widgets[2] = new WidgetTrackingStatus(
         0,
         1,
@@ -50,6 +50,7 @@ void TrackingObjectView::setup()
 
 void TrackingObjectView::loop()
 {
+    Serial.println("TrackingObjectView::loop()");
     TrackingObjectService::loop();
     for (int i = 0; i < widgetNumbers; i++)
     {

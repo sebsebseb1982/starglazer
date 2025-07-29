@@ -1,6 +1,7 @@
 #include "widget.h"
 #include "screen.h"
 #include "touch-screen.h"
+#include "motor.h"
 
 Widget::Widget(
   unsigned int column,
@@ -66,6 +67,7 @@ void Widget::refresh() {
     message += F(" pushed");
     Serial.println(message);*/
     manageTouchDown();
+    //Motor::turn();
   }
   /*if (touchStatus) {
     manageTouch();
@@ -84,10 +86,15 @@ void Widget::refresh() {
 
 boolean Widget::isTouched() {
   Serial.print("Widget::isTouched() ");
-  Serial.println(label);
-  return TouchScreen::isTouched
+  Serial.print(label);
+  Serial.println(" Start");
+boolean isTpivchref = TouchScreen::isTouched
          && TouchScreen::x >= x
          && TouchScreen::x < x + BUTTON_SIZE
          && TouchScreen::y >= y
          && TouchScreen::y < y + BUTTON_SIZE;
+  Serial.print("Widget::isTouched() ");
+  Serial.print(label);
+  Serial.println(" Stop");
+  return isTpivchref;
 }

@@ -21,7 +21,8 @@ class GPSData {
 
 class GPS {
   private:
-  
+    static unsigned long startMillis;
+
   public:
     static TinyGPSPlus gps;
     static GPSData currentData;

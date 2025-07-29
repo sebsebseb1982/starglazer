@@ -154,12 +154,15 @@ void WidgetTrackingStatus::drawAzimuthCompass(unsigned int x, unsigned int y)
 
   float angle = (360.0 - TrackingObjectService::currentEquatorialCoordinates.azimuth) + 90.0;
 
-  screen->drawLine(
-      x + compassSize / 2,
-      y + compassSize / 2,
-      x + compassSize / 2 + cos(angle * PI / 180.0) * ((compassSize * 1.0) / 3.0),
-      y + compassSize / 2 - sin(angle * PI / 180.0) * ((compassSize * 1.0) / 3.0),
-      GREEN);
+  if (TrackingObjectService::isTracking)
+  {
+    screen->drawLine(
+        x + compassSize / 2,
+        y + compassSize / 2,
+        x + compassSize / 2 + cos(angle * PI / 180.0) * ((compassSize * 1.0) / 3.0),
+        y + compassSize / 2 - sin(angle * PI / 180.0) * ((compassSize * 1.0) / 3.0),
+        GREEN);
+  }
 }
 
 void WidgetTrackingStatus::drawAltitudeChart(unsigned int x, unsigned int y)
@@ -203,12 +206,15 @@ void WidgetTrackingStatus::drawAltitudeChart(unsigned int x, unsigned int y)
       y + (compassSize / 2) + tickSize,
       chartColor);
 
-  screen->drawLine(
-      x,
-      y + compassSize / 2,
-      x + cos(TrackingObjectService::currentEquatorialCoordinates.altitude * PI / 180.0) * lineSize,
-      y + compassSize / 2 - sin(TrackingObjectService::currentEquatorialCoordinates.altitude * PI / 180.0) * lineSize,
-      GREEN);
+  if (TrackingObjectService::isTracking)
+  {
+    screen->drawLine(
+        x,
+        y + compassSize / 2,
+        x + cos(TrackingObjectService::currentEquatorialCoordinates.altitude * PI / 180.0) * lineSize,
+        y + compassSize / 2 - sin(TrackingObjectService::currentEquatorialCoordinates.altitude * PI / 180.0) * lineSize,
+        GREEN);
+  }
 }
 
 void WidgetTrackingStatus::refreshValue()

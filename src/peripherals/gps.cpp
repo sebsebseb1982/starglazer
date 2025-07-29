@@ -1,5 +1,6 @@
 #include <Arduino.h>
 #include "gps.h"
+#include "duration.h"
 
 GPSData::GPSData()
 {
@@ -15,39 +16,53 @@ GPSData::GPSData(float latitudeInDegrees, float longitudeInDegrees, float elevat
 
 TinyGPSPlus GPS::gps;
 GPSData GPS::currentData;
+unsigned long GPS::startMillis = 0;
 
 void GPS::setup()
 {
   Serial2.begin(9600, SERIAL_8N1, 0, 4);
-  //Serial2.begin(115200, SERIAL_8N1, 0, 4);
+
+  GPS::currentData = GPSData(
+      0,
+      0,
+      0,
+      false);
 }
 
 void GPS::loop()
 {
-  if (Serial2.available() > 0)
+
+  unsigned long currentMillis = millis();
+
+  if (currentMillis - startMillis >= ONE_MINUTE || !GPS::currentData.isValid)
   {
-    if (GPS::gps.encode(Serial2.read()))
+    if (Serial2.available() > 0)
     {
-      if (GPS::gps.location.isValid() && GPS::gps.altitude.isValid())
+      if (GPS::gps.encode(Serial2.read()))
       {
-        GPS::currentData = GPSData(
-            gps.location.lat(),
-            gps.location.lng(),
-            gps.altitude.meters(),
-            true);
-      }
-      else
-      {
-        Serial.println("GPS::loop() E");
-        GPS::currentData = GPSData(
-            0,
-            0,
-            0,
-            false);
+        Serial.println("GPS::gps.encode(Serial2.read())");
+        if (GPS::gps.location.isValid() && GPS::gps.altitude.isValid())
+        {
+          GPS::currentData = GPSData(
+              gps.location.lat(),
+              gps.location.lng(),
+              gps.altitude.meters(),
+              true);
+        }
+        else
+        {
+          GPS::currentData = GPSData(
+              0,
+              0,
+              0,
+              false);
+        }
       }
     }
-  }
 
-  if (millis() > 5000 && GPS::gps.charsProcessed() < 10)
-    Serial.println(F("No GPS data received: check wiring"));
+    if (millis() > 5000 && GPS::gps.charsProcessed() < 10)
+      Serial.println(F("No GPS data received: check wiring"));
+
+    startMillis = currentMillis;
+  }
 }
