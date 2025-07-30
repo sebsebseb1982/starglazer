@@ -3,6 +3,8 @@
 #include "colors.h"
 #include "tracking-object-service.h"
 #include "image-saturn.h"
+#include "current-view-service.h"
+#include "choosing-object-view.h"
 
 WidgetTrackedObjectButton::WidgetTrackedObjectButton(
     unsigned int column,
@@ -71,4 +73,5 @@ void WidgetTrackedObjectButton::manageTouchDown()
 
 void WidgetTrackedObjectButton::manageTouchUp()
 {
+    //CurrentViewService::changeCurrentView(new ChoosingObjectView(screen));
 }

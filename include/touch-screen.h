@@ -4,7 +4,7 @@
 #include <Arduino.h>
 #include <TFT_eSPI.h>
 
-#define PEN_PIN 27
+#define PEN_PIN 36
 
 class TouchScreen
 {

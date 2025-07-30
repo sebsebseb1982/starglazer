@@ -15,6 +15,7 @@ WidgetAPIStatus::WidgetAPIStatus(
                                               screen,
                                               refreshPeriodInMs)
 {
+  this->starGlazeAPI = new StarGlazeAPI();
 }
 
 void WidgetAPIStatus::draw()
@@ -34,19 +35,19 @@ void WidgetAPIStatus::draw()
   int imageSize = 32;
 
   screen->drawBitmap(
-    x + (BUTTON_SIZE - ICON_SIZE) / 2,
-    y + ((BUTTON_SIZE - ICON_SIZE) / 2) - 8,
+      x + (BUTTON_SIZE - ICON_SIZE) / 2,
+      y + ((BUTTON_SIZE - ICON_SIZE) / 2) - 8,
       cog32x32,
       imageSize,
       imageSize,
-      GREEN);
+      this->currentAPIStatus ? GREEN : ORANGE);
 
   previousAPIStatus = currentAPIStatus;
 }
 
 void WidgetAPIStatus::refreshValue()
 {
-  this->currentAPIStatus = WiFiConnection::isConnected;
+  this->currentAPIStatus = starGlazeAPI->health();
 }
 
 boolean WidgetAPIStatus::isValueChanged()
@@ -64,4 +65,9 @@ void WidgetAPIStatus::manageTouchDown()
 
 void WidgetAPIStatus::manageTouchUp()
 {
+}
+
+WidgetAPIStatus::~WidgetAPIStatus()
+{
+  delete this->starGlazeAPI;
 }

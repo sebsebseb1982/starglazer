@@ -7,12 +7,13 @@
 class CurrentViewService
 {
 private:
-    View* currentView;
+    static View* currentView;
     TFT_eSPI *screen;
 public:
     CurrentViewService(TFT_eSPI *screen);
     void setup();
     void loop();
+    static void changeCurrentView(View* newView);
 };
 
 #endif

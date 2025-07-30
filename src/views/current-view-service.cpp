@@ -1,6 +1,8 @@
 #include "current-view-service.h"
 #include "tracking-object-view.h"
 
+View *CurrentViewService::currentView;
+
 CurrentViewService::CurrentViewService(TFT_eSPI *screen)
 {
     this->screen = screen;
@@ -8,11 +10,20 @@ CurrentViewService::CurrentViewService(TFT_eSPI *screen)
 
 void CurrentViewService::setup()
 {
-    this->currentView = new TrackingObjectView(this->screen, new TrackedObject(F("planets-and-moons"), F("sun")));
-    this->currentView->setup();
+    changeCurrentView(
+        new TrackingObjectView(
+            this->screen,
+            new TrackedObject(F("planets-and-moons"), F("sun"))));
 }
 
 void CurrentViewService::loop()
 {
-    this->currentView->loop();
+    CurrentViewService::currentView->loop();
+}
+
+void CurrentViewService::changeCurrentView(View *newView)
+{
+    delete CurrentViewService::currentView;
+    CurrentViewService::currentView = newView;
+    CurrentViewService::currentView->setup();
 }
