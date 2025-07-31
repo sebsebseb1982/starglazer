@@ -11,6 +11,8 @@ WidgetWifiStatus::WidgetWifiStatus(
     TFT_eSPI *screen,
     unsigned long refreshPeriodInMs) : Widget(column,
                                               row,
+                                              1,
+                                              1,
                                               label,
                                               screen,
                                               refreshPeriodInMs)
@@ -22,8 +24,8 @@ void WidgetWifiStatus::draw()
   gui.drawButton(
       x,
       y,
-      1,
-      1,
+      columnSpan,
+      rowSpan,
       label,
       UNAVAILABLE);
 

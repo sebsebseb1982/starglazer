@@ -16,6 +16,8 @@ WidgetTrackingStatus::WidgetTrackingStatus(
     ObjectToWatch *trackedObject,
     unsigned long refreshPeriodInMs) : Widget(column,
                                               row,
+                                              4,
+                                              2,
                                               label,
                                               screen,
                                               refreshPeriodInMs)
@@ -28,8 +30,8 @@ void WidgetTrackingStatus::draw()
   gui.drawButton(
       x,
       y,
-      4,
-      2,
+      columnSpan,
+      rowSpan,
       label,
       UNAVAILABLE);
   /*

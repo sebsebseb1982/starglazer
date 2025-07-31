@@ -14,6 +14,8 @@ WidgetTrackedObjectButton::WidgetTrackedObjectButton(
     ObjectToWatch *trackedObject,
     unsigned long refreshPeriodInMs) : Widget(column,
                                               row,
+                                              4,
+                                              1,
                                               label,
                                               screen,
                                               refreshPeriodInMs)
@@ -26,8 +28,8 @@ void WidgetTrackedObjectButton::draw()
     gui.drawButton(
         x,
         y,
-        4,
-        1,
+        columnSpan,
+        rowSpan,
         label,
         UNAVAILABLE);
 

@@ -13,6 +13,8 @@ WidgetLaserButton::WidgetLaserButton(
 ) : Widget(
     column,
     row,
+    1,
+    1,
     label,
     screen,
     refreshPeriodInMs

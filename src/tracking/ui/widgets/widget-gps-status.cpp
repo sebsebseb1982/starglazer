@@ -10,6 +10,8 @@ WidgetGPSStatus::WidgetGPSStatus(
     TFT_eSPI *screen,
     unsigned long refreshPeriodInMs) : Widget(column,
                                               row,
+                                              2,
+                                              2,
                                               label,
                                               screen,
                                               refreshPeriodInMs)
@@ -21,8 +23,8 @@ void WidgetGPSStatus::draw()
   gui.drawButton(
       x,
       y,
-      2,
-      2,
+      columnSpan,
+      rowSpan,
       label,
       UNAVAILABLE);
 

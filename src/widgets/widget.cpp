@@ -4,14 +4,18 @@
 #include "motor.h"
 
 Widget::Widget(
-    unsigned int column,
-    unsigned int row,
+    unsigned int columnPosition,
+    unsigned int rowPosition,
+    unsigned int columnSpan,
+    unsigned int rowSpan,
     String label,
     TFT_eSPI *screen,
     unsigned long refreshPeriodInMs)
 {
-  this->x = column * BUTTON_SIZE;
-  this->y = row * BUTTON_SIZE;
+  this->x = columnPosition * BUTTON_SIZE;
+  this->y = rowPosition * BUTTON_SIZE;
+  this->columnSpan = columnSpan;
+  this->rowSpan = rowSpan;
   this->label = label;
   this->screen = screen;
   this->refreshPeriodInMs = refreshPeriodInMs;
@@ -92,11 +96,12 @@ void Widget::refresh()
 
 boolean Widget::isTouched()
 {
-  boolean isTouched = TouchScreen::isTouched
-   && TouchScreen::x >= x 
-   && TouchScreen::x < x + BUTTON_SIZE 
-   && TouchScreen::y >= y 
-   && TouchScreen::y < y + BUTTON_SIZE;
+  boolean isTouched = 
+  TouchScreen::isTouched
+    && TouchScreen::x >= x
+    && TouchScreen::x < x + columnSpan * BUTTON_SIZE 
+    && TouchScreen::y >= y 
+    && TouchScreen::y < y + rowSpan * BUTTON_SIZE;
 
   if (isTouched)
   {
