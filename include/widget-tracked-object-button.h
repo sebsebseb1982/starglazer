@@ -1,6 +1,6 @@
 #include <Arduino.h>
 #include <TFT_eSPI.h>
-#include "tracked-object.h"
+#include "object-to-watch.h"
 #include "widget.h"
 
 class WidgetTrackedObjectButton : public Widget
@@ -10,7 +10,7 @@ private:
     boolean previousValue;
     ButtonStatus buttonStatus;
     ButtonStatus previousButtonStatus;
-    TrackedObject *trackedObject;
+    ObjectToWatch *trackedObject;
 
 public:
     WidgetTrackedObjectButton(
@@ -18,7 +18,7 @@ public:
         unsigned int row,
         String label,
         TFT_eSPI *screen,
-        TrackedObject *trackedObject,
+        ObjectToWatch *trackedObject,
         unsigned long refreshPeriodInMs);
     void draw();
     void refreshValue();

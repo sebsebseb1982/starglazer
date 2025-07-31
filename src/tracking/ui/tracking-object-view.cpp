@@ -11,7 +11,7 @@
 
 TrackingObjectView::TrackingObjectView(
     TFT_eSPI *screen,
-    TrackedObject *trackedObject) : trackedObject(trackedObject)
+    ObjectToWatch *trackedObject) : trackedObject(trackedObject)
 {
     this->screen = screen;
 }

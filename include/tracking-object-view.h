@@ -1,7 +1,7 @@
 #ifndef TRACKING_OBJECT_VIEW_H
 #define TRACKING_OBJECT_VIEW_H
 #include "view.h"
-#include "tracked-object.h"
+#include "object-to-watch.h"
 #include "widget.h"
 #include "tracking-object-service.h"
 
@@ -11,13 +11,13 @@ class TrackingObjectView : public View
 {
 private:
   TFT_eSPI *screen;
-  TrackedObject *trackedObject;
+  ObjectToWatch *trackedObject;
   Widget *widgets[widgetNumbers];
 
 public:
   TrackingObjectView(
       TFT_eSPI *screen,
-      TrackedObject *trackedObject);
+      ObjectToWatch *trackedObject);
   void setup();
   void loop();
 };

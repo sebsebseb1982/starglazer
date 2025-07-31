@@ -4,12 +4,12 @@
 #include "motor.h"
 
 Widget::Widget(
-  unsigned int column,
-  unsigned int row,
-  String label,
-  TFT_eSPI *screen,
-  unsigned long refreshPeriodInMs
-) {
+    unsigned int column,
+    unsigned int row,
+    String label,
+    TFT_eSPI *screen,
+    unsigned long refreshPeriodInMs)
+{
   this->x = column * BUTTON_SIZE;
   this->y = row * BUTTON_SIZE;
   this->label = label;
@@ -19,16 +19,19 @@ Widget::Widget(
   this->startMillis = millis();
 }
 
-void Widget::init() {
+void Widget::init()
+{
   refreshValue();
   draw();
 }
 
-void Widget::refresh() {
+void Widget::refresh()
+{
   currentMillis = millis();
   boolean valueRefreshed = false;
   unsigned long refreshValueDurationInMs = 0;
-  if (currentMillis - startMillis >= refreshPeriodInMs) {
+  if (currentMillis - startMillis >= refreshPeriodInMs)
+  {
     refreshValue();
     /*
     valueRefreshed = true;
@@ -38,41 +41,44 @@ void Widget::refresh() {
     startMillis = currentMillis;
   }
 
-  if (isValueChanged()) {
+  if (isValueChanged())
+  {
     draw();
   }
 
-/*
-  if (valueRefreshed) {
-    screen->drawString(
-      "       ",
-      x + BUTTON_SIZE / 2,
-      y + BUTTON_MARGIN + LED_MARGIN,
-      1
-    );
-    screen->drawString(
-      String(refreshValueDurationInMs),
-      x + BUTTON_SIZE / 2,
-      y + BUTTON_MARGIN + LED_MARGIN,
-      1
-    );
-  }
-*/
+  /*
+    if (valueRefreshed) {
+      screen->drawString(
+        "       ",
+        x + BUTTON_SIZE / 2,
+        y + BUTTON_MARGIN + LED_MARGIN,
+        1
+      );
+      screen->drawString(
+        String(refreshValueDurationInMs),
+        x + BUTTON_SIZE / 2,
+        y + BUTTON_MARGIN + LED_MARGIN,
+        1
+      );
+    }
+  */
 
   touchStatus = isTouched();
-  if (previousTouchStatus != touchStatus && touchStatus) {
+  if (previousTouchStatus != touchStatus && touchStatus)
+  {
     /*String message;
     message += F("Button ");
     message += label;
     message += F(" pushed");
     Serial.println(message);*/
     manageTouchDown();
-    //Motor::turn();
+    // Motor::turn();
   }
   /*if (touchStatus) {
     manageTouch();
     }*/
-  if (previousTouchStatus != touchStatus && !touchStatus) {
+  if (previousTouchStatus != touchStatus && !touchStatus)
+  {
     /*String message;
     message += F("Button ");
     message += label;
@@ -81,20 +87,25 @@ void Widget::refresh() {
     manageTouchUp();
   }
   previousTouchStatus = touchStatus;
-  //Serial.println("Widget::refresh() " + label + "(time=" + String(millis() - currentMillis) + "ms )");
+  // Serial.println("Widget::refresh() " + label + "(time=" + String(millis() - currentMillis) + "ms )");
 }
 
-boolean Widget::isTouched() {
-  Serial.print("Widget::isTouched() ");
-  Serial.print(label);
-  Serial.println(" Start");
-boolean isTpivchref = TouchScreen::isTouched
-         && TouchScreen::x >= x
-         && TouchScreen::x < x + BUTTON_SIZE
-         && TouchScreen::y >= y
-         && TouchScreen::y < y + BUTTON_SIZE;
-  Serial.print("Widget::isTouched() ");
-  Serial.print(label);
-  Serial.println(" Stop");
-  return isTpivchref;
+boolean Widget::isTouched()
+{
+  boolean isTouched = TouchScreen::isTouched
+   && TouchScreen::x >= x 
+   && TouchScreen::x < x + BUTTON_SIZE 
+   && TouchScreen::y >= y 
+   && TouchScreen::y < y + BUTTON_SIZE;
+
+  if (isTouched)
+  {
+    String message;
+    message += F("Button ");
+    message += label;
+    message += F(" touched");
+    Serial.println(message);
+  }
+
+  return isTouched;
 }

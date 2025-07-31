@@ -13,7 +13,7 @@ void CurrentViewService::setup()
     changeCurrentView(
         new TrackingObjectView(
             this->screen,
-            new TrackedObject(F("planets-and-moons"), F("sun"))));
+            new ObjectToWatch(F("planets-and-moons"), F("sun"), F("Sun"))));
 }
 
 void CurrentViewService::loop()

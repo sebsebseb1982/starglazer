@@ -19,12 +19,12 @@ EquatorialCoordinatesService::EquatorialCoordinatesService()
   this->http.setTimeout(5000);
 }
 
-EquatorialCoordinates EquatorialCoordinatesService::compute(GPSData gpsData, TrackedObject *trackedObject) {
+EquatorialCoordinates EquatorialCoordinatesService::compute(GPSData gpsData, ObjectToWatch *trackedObject) {
   String skyfieldAPIURL;
   skyfieldAPIURL += F("http://192.168.1.169:22666/horizontal-coordinates/");
   skyfieldAPIURL += trackedObject->type;
   skyfieldAPIURL += F("/");
-  skyfieldAPIURL += trackedObject->name;
+  skyfieldAPIURL += trackedObject->code;
   skyfieldAPIURL += F("?latitude=");
   skyfieldAPIURL += gpsData.latitudeInDegrees;
   skyfieldAPIURL += F("&longitude=");

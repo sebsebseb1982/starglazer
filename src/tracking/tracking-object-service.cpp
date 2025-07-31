@@ -1,7 +1,7 @@
 #include "tracking-object-service.h"
 #include "duration.h"
 
-TrackedObject *TrackingObjectService::trackedObject = nullptr;
+ObjectToWatch *TrackingObjectService::trackedObject = nullptr;
 
 EquatorialCoordinates TrackingObjectService::currentEquatorialCoordinates;
 boolean TrackingObjectService::isTracking = false;
@@ -16,7 +16,7 @@ EquatorialCoordinatesService &TrackingObjectService::getEquatorialCoordinatesSer
 
 unsigned long TrackingObjectService::startMillis = 0;
 
-void TrackingObjectService::setup(TrackedObject *trackedObject)
+void TrackingObjectService::setup(ObjectToWatch *trackedObject)
 {
     TrackingObjectService::isTracking = GPS::currentData.isValid;
     TrackingObjectService::trackedObject = trackedObject;

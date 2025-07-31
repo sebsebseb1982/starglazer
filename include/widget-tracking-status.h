@@ -3,14 +3,14 @@
 
 #include "widget.h"
 #include "equatorial-coordinates-service.h"
-#include "tracked-object.h"
+#include "object-to-watch.h"
 #include "tracking-object-service.h"
 
 class WidgetTrackingStatus : public Widget
 {
 private:
   EquatorialCoordinates previousEquatorialCoordinates;
-  TrackedObject *trackedObject;
+  ObjectToWatch *trackedObject;
   void drawAzimuthStatus(unsigned int x, unsigned int y);
   void drawAzimuthCompass(unsigned int x, unsigned int y);
 
@@ -26,7 +26,7 @@ public:
       unsigned int row,
       String label,
       TFT_eSPI *screen,
-      TrackedObject *trackedObject,
+      ObjectToWatch *trackedObject,
       unsigned long refreshPeriodInMs);
   void draw() override;
   void refreshValue() override;

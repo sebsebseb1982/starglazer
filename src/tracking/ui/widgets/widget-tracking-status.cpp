@@ -13,7 +13,7 @@ WidgetTrackingStatus::WidgetTrackingStatus(
     unsigned int row,
     String label,
     TFT_eSPI *screen,
-    TrackedObject *trackedObject,
+    ObjectToWatch *trackedObject,
     unsigned long refreshPeriodInMs) : Widget(column,
                                               row,
                                               label,

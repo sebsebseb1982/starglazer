@@ -11,7 +11,7 @@ WidgetTrackedObjectButton::WidgetTrackedObjectButton(
     unsigned int row,
     String label,
     TFT_eSPI *screen,
-    TrackedObject *trackedObject,
+    ObjectToWatch *trackedObject,
     unsigned long refreshPeriodInMs) : Widget(column,
                                               row,
                                               label,
@@ -47,7 +47,7 @@ void WidgetTrackedObjectButton::draw()
     screen->print(typeString);
 
     String nametring = "Name : ";
-    nametring += trackedObject->name;
+    nametring += trackedObject->code;
     screen->setCursor(x + iconSize + 30, y + 38);
     screen->print(nametring);
 
@@ -73,5 +73,5 @@ void WidgetTrackedObjectButton::manageTouchDown()
 
 void WidgetTrackedObjectButton::manageTouchUp()
 {
-    //CurrentViewService::changeCurrentView(new ChoosingObjectView(screen));
+    CurrentViewService::changeCurrentView(new ChoosingObjectView(screen));
 }

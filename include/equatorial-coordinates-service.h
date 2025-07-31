@@ -5,7 +5,7 @@
 #include <HTTPClient.h>
 #include <ArduinoJson.h>
 #include <gps.h>
-#include "tracked-object.h"
+#include "object-to-watch.h"
 
 class EquatorialCoordinates {
 private:
@@ -27,7 +27,7 @@ private:
   HTTPClient http;
 public:
   EquatorialCoordinatesService();
-  EquatorialCoordinates compute(GPSData gpsData, TrackedObject *trackedObject);
+  EquatorialCoordinates compute(GPSData gpsData, ObjectToWatch *trackedObject);
 };
 
 #endif
