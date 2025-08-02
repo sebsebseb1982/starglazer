@@ -56,10 +56,6 @@ boolean WidgetWifiStatus::isValueChanged()
   return currentWifiStatus != previousWifiStatus;
 }
 
-void WidgetWifiStatus::manageTouch()
-{
-}
-
 void WidgetWifiStatus::manageTouchDown()
 {
 }

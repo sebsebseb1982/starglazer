@@ -57,10 +57,6 @@ boolean WidgetAPIStatus::isValueChanged()
   return currentAPIStatus != previousAPIStatus;
 }
 
-void WidgetAPIStatus::manageTouch()
-{
-}
-
 void WidgetAPIStatus::manageTouchDown()
 {
 }

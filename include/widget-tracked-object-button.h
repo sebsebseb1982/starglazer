@@ -23,7 +23,6 @@ public:
     void draw();
     void refreshValue();
     boolean isValueChanged();
-    void manageTouch();
     void manageTouchUp();
     void manageTouchDown();
 };

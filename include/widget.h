@@ -37,7 +37,6 @@ public:
   virtual void draw() = 0;
   virtual void refreshValue() = 0;
   virtual boolean isValueChanged() = 0;
-  virtual void manageTouch() {};
   virtual void manageTouchUp() {};
   virtual void manageTouchDown() {};
 };

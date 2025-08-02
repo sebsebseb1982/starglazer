@@ -1,5 +1,12 @@
 #include "Catalog.h"
 
-Catalog::Catalog() {
+Category::Category(
+    String code,
+    String label) : code(code), label(label)
+{
+}
+
+Catalog::Catalog()
+{
     // Constructor implementation
 }

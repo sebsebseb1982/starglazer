@@ -1,15 +1,24 @@
 
 #ifndef MOTOR_H
 #define MOTOR_H
+#include <Arduino.h>
+#include <AccelStepper.h>
 
-#define DIR_PIN 32
-#define STEP_PIN 33
+class Motor
+{
+private:
+  int stepsPerRevolution;
+  String label;
+  AccelStepper stepper;
 
-class Motor {
-  private:
-
-  public:
-    static void turn();
+public:
+  Motor(int dirPin,
+        int stepPin,
+        int stepsPerRevolution,
+        int enabledPin,
+        String label);
+  void goToAbsoluteAngle(float angleInDegrees);
+  void loop();
 };
 
 #endif

@@ -3,7 +3,7 @@
 
 #include "widget.h"
 
-class WidgetLaserButton : public Widget {
+class WidgetBackButton : public Widget {
   private:
     boolean value;
     boolean previousValue;
@@ -11,7 +11,7 @@ class WidgetLaserButton : public Widget {
     ButtonStatus previousButtonStatus;
 
   public:
-    WidgetLaserButton(
+    WidgetBackButton(
       unsigned int column,
       unsigned int row,
       String label,

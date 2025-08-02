@@ -55,10 +55,26 @@ Catalog StarGlazeAPI::getCatalog()
             Serial.println(error.c_str());
             return Catalog();
         }
-        // TODO
+        Catalog catalog = Catalog();
 
-        Serial.println(this->doc.size());
-        return Catalog();
+        for (int indexCategory = 0; indexCategory < this->doc.size(); indexCategory++)
+        {
+            String categoryCode = this->doc[indexCategory]["code"];
+            Category category = Category(
+                categoryCode,
+                this->doc[indexCategory]["label"]);
+
+            for (int indexObject = 0; indexObject < this->doc[indexCategory]["objects"].size(); indexObject++)
+            {
+                category.objectsToWatch.push_back(ObjectToWatch(
+                    categoryCode,
+                    this->doc[indexCategory]["objects"][indexObject]["code"],
+                    this->doc[indexCategory]["objects"][indexObject]["label"]));
+            }
+
+            catalog.categories.push_back(category);
+        }
+        return catalog;
     }
     else
     {

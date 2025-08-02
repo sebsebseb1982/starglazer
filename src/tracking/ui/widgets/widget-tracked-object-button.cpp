@@ -65,10 +65,6 @@ boolean WidgetTrackedObjectButton::isValueChanged()
     return value != previousValue;
 }
 
-void WidgetTrackedObjectButton::manageTouch()
-{
-}
-
 void WidgetTrackedObjectButton::manageTouchDown()
 {
 }

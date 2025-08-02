@@ -4,6 +4,7 @@
 #include "object-to-watch.h"
 #include "tracking-object-service.h"
 #include "equatorial-coordinates-service.h"
+#include "motor.h"
 
 class TrackingObjectService
 {
@@ -12,6 +13,8 @@ private:
     static EquatorialCoordinatesService &equatorialCoordinatesService;
     static EquatorialCoordinatesService &getEquatorialCoordinatesServiceInstance();
     static unsigned long startMillis;
+    static Motor azimuthMotor;
+    static Motor altitudeMotor;
 
 public:
     static EquatorialCoordinates currentEquatorialCoordinates;

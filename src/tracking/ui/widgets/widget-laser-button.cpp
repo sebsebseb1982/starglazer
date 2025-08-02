@@ -50,9 +50,6 @@ boolean WidgetLaserButton::isValueChanged() {
   return value != previousValue;
 }
 
-void WidgetLaserButton::manageTouch() {
-}
-
 void WidgetLaserButton::manageTouchDown() {
 }
 

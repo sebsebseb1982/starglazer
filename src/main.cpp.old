@@ -1,30 +1,71 @@
 #include <AccelStepper.h>
 
-// Définition du type de driver (1 = DRIVER pour les pilotes avec STEP+DIR)
-#define dirPin 32
-#define stepPin 33
+// Mode DRIVER: utilise les broches Step et Direction
+#define STEP_PIN_1 18
+#define DIR_PIN_1 5
+#define STEP_PIN_2 4
+#define DIR_PIN_2 16
+#define ENABLED_PIN 17
 
-AccelStepper stepper(AccelStepper::DRIVER,stepPin, dirPin); // STEP = 2, DIR = 3
+// Création de l'instance du moteur
+AccelStepper stepperAltitude(AccelStepper::DRIVER, STEP_PIN_1, DIR_PIN_1);
+AccelStepper stepperAzimuth(AccelStepper::DRIVER, STEP_PIN_2, DIR_PIN_2);
 
-void setup() {
-//  Serial.begin(115200);
-//  Serial.println("setup");
+// Nombre de pas à effectuer à chaque loop
+const int stepsPerLoop = 3200;
 
-  // Définir la vitesse maximale et l'accélération.
-  stepper.setMaxSpeed(3000);     // En pas par seconde
-  stepper.setAcceleration(1000);  // En pas par seconde^2
+// État du déplacement
+bool moveInProgress1 = false;
+bool moveInProgress2 = false;
+int directionAzimuth = 1;
+int directionAltitude = 1;
 
-  // Définir une position cible
-  stepper.moveTo(5000);  // Avancer de 2000 pas
+void setup()
+{
+  // Définir la vitesse et l'accélération (ajustez selon votre moteur)
+  stepperAltitude.setMaxSpeed(1000);    // vit. max en pas/sec
+  stepperAltitude.setAcceleration(500); // acc. en pas/sec²
+  stepperAzimuth.setMaxSpeed(1000);    // vit. max en pas/sec
+  stepperAzimuth.setAcceleration(500); // acc. en pas/sec²
+  pinMode(ENABLED_PIN, OUTPUT);
+  digitalWrite(ENABLED_PIN, LOW);
 }
 
-void loop() {
-  //Serial.println("loop");
-  // Fait avancer le moteur vers la position cible
-  stepper.run();
+void loop()
+{
+  // Si le moteur est en train de bouger, on continue
+  if (stepperAltitude.distanceToGo() != 0)
+  {
+    stepperAltitude.run();
+  }
+  else if (!moveInProgress1)
+  {
+    // Si le moteur a terminé son déplacement, on planifie un nouveau
+    stepperAltitude.move(directionAltitude*(stepsPerLoop/4)); // Avancer de 3200 pas
+    directionAltitude *= -1;
+    moveInProgress1 = true;
+  }
+  else
+  {
+    // Quand le déplacement est terminé
+    moveInProgress1 = false;
+  }
 
-  // Une fois atteint, on recule
-  if (stepper.distanceToGo() == 0) {
-    stepper.moveTo(-stepper.currentPosition());  // Revenir à zéro
+  // Si le moteur est en train de bouger, on continue
+  if (stepperAzimuth.distanceToGo() != 0)
+  {
+    stepperAzimuth.run();
+  }
+  else if (!moveInProgress2)
+  {
+    // Si le moteur a terminé son déplacement, on planifie un nouveau
+    stepperAzimuth.move(directionAzimuth * stepsPerLoop); // Avancer de 3200 pas
+    directionAzimuth *= -1;
+    moveInProgress2 = true;
+  }
+  else
+  {
+    // Quand le déplacement est terminé
+    moveInProgress2 = false;
   }
 }

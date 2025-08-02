@@ -90,10 +90,6 @@ boolean WidgetGPSStatus::isValueChanged()
   return isGPSDataChanged;
 }
 
-void WidgetGPSStatus::manageTouch()
-{
-}
-
 void WidgetGPSStatus::manageTouchDown()
 {
 }

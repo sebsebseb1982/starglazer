@@ -2,17 +2,18 @@
 #define OBJECT_TO_WATCH_H
 #include <Arduino.h>
 
-class ObjectToWatch {
+class ObjectToWatch
+{
 private:
-
 public:
   String type;
   String code;
   String label;
   ObjectToWatch(
-    String type,
-    String code,
-    String label);
+      String type,
+      String code,
+      String label);
+  ObjectToWatch() : ObjectToWatch("", "", "") {};
 };
 
 #endif

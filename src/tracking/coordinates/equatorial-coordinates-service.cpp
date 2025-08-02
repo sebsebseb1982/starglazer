@@ -1,3 +1,4 @@
+#include <UrlEncode.h>
 #include "equatorial-coordinates-service.h"
 #define HTTP_RETRY 10
 
@@ -24,7 +25,7 @@ EquatorialCoordinates EquatorialCoordinatesService::compute(GPSData gpsData, Obj
   skyfieldAPIURL += F("http://192.168.1.169:22666/horizontal-coordinates/");
   skyfieldAPIURL += trackedObject->type;
   skyfieldAPIURL += F("/");
-  skyfieldAPIURL += trackedObject->code;
+  skyfieldAPIURL += urlEncode(trackedObject->code);
   skyfieldAPIURL += F("?latitude=");
   skyfieldAPIURL += gpsData.latitudeInDegrees;
   skyfieldAPIURL += F("&longitude=");

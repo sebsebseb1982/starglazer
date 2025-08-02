@@ -19,7 +19,6 @@ public:
   void draw() override;
   void refreshValue() override;
   boolean isValueChanged() override;
-  void manageTouch();
   void manageTouchUp();
   void manageTouchDown();
 };

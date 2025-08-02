@@ -25,6 +25,7 @@ Widget::Widget(
 
 void Widget::init()
 {
+  this->previousTouchStatus = false;
   refreshValue();
   draw();
 }
@@ -37,11 +38,6 @@ void Widget::refresh()
   if (currentMillis - startMillis >= refreshPeriodInMs)
   {
     refreshValue();
-    /*
-    valueRefreshed = true;
-    refreshValueDurationInMs = millis() - currentMillis;
-    Serial.println("refreshValue() " + label + "(time=" + String(refreshValueDurationInMs) + " ms)");
-    */
     startMillis = currentMillis;
   }
 
@@ -50,48 +46,27 @@ void Widget::refresh()
     draw();
   }
 
-  /*
-    if (valueRefreshed) {
-      screen->drawString(
-        "       ",
-        x + BUTTON_SIZE / 2,
-        y + BUTTON_MARGIN + LED_MARGIN,
-        1
-      );
-      screen->drawString(
-        String(refreshValueDurationInMs),
-        x + BUTTON_SIZE / 2,
-        y + BUTTON_MARGIN + LED_MARGIN,
-        1
-      );
-    }
-  */
-
   touchStatus = isTouched();
   if (previousTouchStatus != touchStatus && touchStatus)
   {
-    /*String message;
+    String message;
     message += F("Button ");
     message += label;
     message += F(" pushed");
-    Serial.println(message);*/
+    Serial.println(message);
     manageTouchDown();
-    // Motor::turn();
   }
-  /*if (touchStatus) {
-    manageTouch();
-    }*/
+
   if (previousTouchStatus != touchStatus && !touchStatus)
   {
-    /*String message;
+    String message;
     message += F("Button ");
     message += label;
     message += F(" released");
-    Serial.println(message);*/
+    Serial.println(message);
     manageTouchUp();
   }
   previousTouchStatus = touchStatus;
-  // Serial.println("Widget::refresh() " + label + "(time=" + String(millis() - currentMillis) + "ms )");
 }
 
 boolean Widget::isTouched()

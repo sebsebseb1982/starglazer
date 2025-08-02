@@ -269,11 +269,6 @@ boolean WidgetTrackingStatus::isValueChanged()
   return isEquatorialCoordinatesChanged;
 }
 
-void WidgetTrackingStatus::manageTouch()
-{
-  // Serial.println("WidgetTrackingStatus::manageTouch()");
-}
-
 void WidgetTrackingStatus::manageTouchDown()
 {
   // Serial.println("WidgetTrackingStatus::manageTouchDown()");

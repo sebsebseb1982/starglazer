@@ -8,6 +8,17 @@ boolean TrackingObjectService::isTracking = false;
 boolean TrackingObjectService::isLaserPointingWanted = true;
 EquatorialCoordinatesService &TrackingObjectService::equatorialCoordinatesService = getEquatorialCoordinatesServiceInstance();
 
+Motor TrackingObjectService::altitudeMotor = Motor(33,
+                                                   25,
+                                                   3200,
+                                                   32,
+                                                   "Altitude");
+Motor TrackingObjectService::azimuthMotor = Motor(27,
+                                                  14,
+                                                  3200,
+                                                  32,
+                                                  "Azimuth");
+
 EquatorialCoordinatesService &TrackingObjectService::getEquatorialCoordinatesServiceInstance()
 {
     static EquatorialCoordinatesService instance;
@@ -33,12 +44,19 @@ void TrackingObjectService::loop()
             TrackingObjectService::currentEquatorialCoordinates = TrackingObjectService::equatorialCoordinatesService.compute(
                 GPS::currentData,
                 TrackingObjectService::trackedObject);
-
+            altitudeMotor.goToAbsoluteAngle(currentEquatorialCoordinates.altitude);
+            azimuthMotor.goToAbsoluteAngle(currentEquatorialCoordinates.azimuth * -1.0);
             startMillis = currentMillis;
         }
     }
     else
     {
         TrackingObjectService::isTracking = false;
+    }
+
+    if (TrackingObjectService::isTracking)
+    {
+        altitudeMotor.loop();
+        azimuthMotor.loop();
     }
 }
