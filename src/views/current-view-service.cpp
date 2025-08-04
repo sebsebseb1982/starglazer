@@ -1,5 +1,5 @@
 #include "current-view-service.h"
-#include "tracking-object-view.h"
+#include "calibration-view.h"
 
 View *CurrentViewService::currentView;
 
@@ -11,9 +11,8 @@ CurrentViewService::CurrentViewService(TFT_eSPI *screen)
 void CurrentViewService::setup()
 {
     changeCurrentView(
-        new TrackingObjectView(
-            this->screen,
-            new ObjectToWatch(F("planets-and-moons"), F("sun"), F("Sun"))));
+        new CalibrationView(
+            this->screen));
 }
 
 void CurrentViewService::loop()

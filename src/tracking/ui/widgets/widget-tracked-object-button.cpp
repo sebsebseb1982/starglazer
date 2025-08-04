@@ -43,15 +43,15 @@ void WidgetTrackedObjectButton::draw()
         iconSize,
         iconColor);
 
-    String typeString = "Type : ";
-    typeString += trackedObject->type;
+    String objectLabel = trackedObject->label;
     screen->setCursor(x + iconSize + 30, y + 20);
-    screen->print(typeString);
+    screen->print(objectLabel);
 
-    String nametring = "Name : ";
-    nametring += trackedObject->code;
+    String objectCode = trackedObject->type;
+    objectCode += F("/");
+    objectCode += trackedObject->code;
     screen->setCursor(x + iconSize + 30, y + 38);
-    screen->print(nametring);
+    screen->print(objectCode);
 
     previousValue = value;
 }

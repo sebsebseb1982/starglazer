@@ -2,7 +2,6 @@
 #include "colors.h"
 #include "starglaze-api.h"
 #include "duration.h"
-#include "widget-back-button.h"
 #include "widget-choose-object-button.h"
 #include "current-view-service.h"
 #include "tracking-object-view.h"
@@ -13,7 +12,7 @@ ChoosingObjectView::ChoosingObjectView(
     TFT_eSPI *screen)
 {
     this->screen = screen;
-    this->objectToWatch = ObjectToWatch("undefined","undefined","undefined");
+    this->objectToWatch = ObjectToWatch("undefined", "undefined", "undefined");
     StarGlazeAPI *starGlazeAPI = new StarGlazeAPI();
     this->catalog = starGlazeAPI->getCatalog();
     delete starGlazeAPI;
@@ -23,15 +22,7 @@ void ChoosingObjectView::setup()
 {
     screen->fillScreen(BACKGROUND_COLOR);
 
-    this->widgets.push_back(
-        new WidgetBackButton(
-            0,
-            0,
-            "Back",
-            this->screen,
-            FIVE_SECONDS));
-
-    int indexWidget = 1;
+    int indexWidget = 0;
 
     for (Category category : catalog.categories)
     {
@@ -39,8 +30,8 @@ void ChoosingObjectView::setup()
         {
             this->widgets.push_back(
                 new WidgetChooseObjectButton(
-                    indexWidget,
-                    0,
+                    indexWidget % 6,
+                    indexWidget / 6,
                     objectToWatch,
                     screen,
                     FIVE_SECONDS));
