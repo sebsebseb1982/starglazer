@@ -18,6 +18,7 @@ public:
         int enabledPin,
         String label);
   void goToAbsoluteAngle(float angleInDegrees);
+  void rotateNSteps(long steps);
   void loop();
 };
 

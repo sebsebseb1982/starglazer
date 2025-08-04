@@ -8,6 +8,7 @@
 #include "widget-azimuth-increase-button.h"
 #include "current-view-service.h"
 #include "choosing-object-view.h"
+#include "gimbal.h"
 
 boolean CalibrationView::calibrationDone = false;
 
@@ -33,28 +34,28 @@ void CalibrationView::setup()
             1,
             0,
             screen,
-            THREE_HOURS));
+            HUNDRED_MILLISECONDS));
 
     widgets.push_back(
         new WidgetAltitudeDecreaseButton(
             1,
             2,
             screen,
-            THREE_HOURS));
+            HUNDRED_MILLISECONDS));
 
     widgets.push_back(
         new WidgetAzimuthIncreaseButton(
             2,
             1,
             screen,
-            THREE_HOURS));
+            HUNDRED_MILLISECONDS));
 
     widgets.push_back(
         new WidgetAzimuthDecreaseButton(
             0,
             1,
             screen,
-            THREE_HOURS));
+            HUNDRED_MILLISECONDS));
 
     for (Widget *widget : widgets)
     {
@@ -74,6 +75,8 @@ void CalibrationView::loop()
         {
             widget->refresh();
         }
+        Gimbal::altitudeMotor.loop();
+        Gimbal::azimuthMotor.loop();
     }
 }
 

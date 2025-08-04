@@ -1,5 +1,6 @@
 #include "tracking-object-service.h"
 #include "duration.h"
+#include "gimbal.h"
 
 ObjectToWatch *TrackingObjectService::trackedObject = nullptr;
 
@@ -7,17 +8,6 @@ EquatorialCoordinates TrackingObjectService::currentEquatorialCoordinates;
 boolean TrackingObjectService::isTracking = false;
 boolean TrackingObjectService::isLaserPointingWanted = true;
 EquatorialCoordinatesService &TrackingObjectService::equatorialCoordinatesService = getEquatorialCoordinatesServiceInstance();
-
-Motor TrackingObjectService::altitudeMotor = Motor(33,
-                                                   25,
-                                                   3200,
-                                                   32,
-                                                   "Altitude");
-Motor TrackingObjectService::azimuthMotor = Motor(27,
-                                                  14,
-                                                  3200,
-                                                  32,
-                                                  "Azimuth");
 
 EquatorialCoordinatesService &TrackingObjectService::getEquatorialCoordinatesServiceInstance()
 {
@@ -44,8 +34,8 @@ void TrackingObjectService::loop()
             TrackingObjectService::currentEquatorialCoordinates = TrackingObjectService::equatorialCoordinatesService.compute(
                 GPS::currentData,
                 TrackingObjectService::trackedObject);
-            altitudeMotor.goToAbsoluteAngle(currentEquatorialCoordinates.altitude);
-            azimuthMotor.goToAbsoluteAngle(currentEquatorialCoordinates.azimuth * -1.0);
+            Gimbal::altitudeMotor.goToAbsoluteAngle(currentEquatorialCoordinates.altitude);
+            Gimbal::azimuthMotor.goToAbsoluteAngle(currentEquatorialCoordinates.azimuth * -1.0);
             startMillis = currentMillis;
         }
     }
@@ -56,7 +46,7 @@ void TrackingObjectService::loop()
 
     if (TrackingObjectService::isTracking)
     {
-        altitudeMotor.loop();
-        azimuthMotor.loop();
+        Gimbal::altitudeMotor.loop();
+        Gimbal::azimuthMotor.loop();
     }
 }

@@ -2,6 +2,7 @@
 #include "gui.h"
 #include "colors.h"
 #include "image-arrow.h"
+#include "gimbal.h"
 
 WidgetAzimuthIncreaseButton::WidgetAzimuthIncreaseButton(
     unsigned int column,
@@ -39,7 +40,10 @@ void WidgetAzimuthIncreaseButton::draw()
 
 void WidgetAzimuthIncreaseButton::refreshValue()
 {
-
+    if (buttonStatus == ACTIVATED)
+    {
+        Gimbal::azimuthMotor.rotateNSteps(10);
+    }
 }
 
 boolean WidgetAzimuthIncreaseButton::isValueChanged()

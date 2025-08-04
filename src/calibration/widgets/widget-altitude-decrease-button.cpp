@@ -2,6 +2,7 @@
 #include "gui.h"
 #include "colors.h"
 #include "image-arrow.h"
+#include "gimbal.h"
 
 WidgetAltitudeDecreaseButton::WidgetAltitudeDecreaseButton(
     unsigned int column,
@@ -39,7 +40,10 @@ void WidgetAltitudeDecreaseButton::draw()
 
 void WidgetAltitudeDecreaseButton::refreshValue()
 {
-
+    if (buttonStatus == ACTIVATED)
+    {
+        Gimbal::altitudeMotor.rotateNSteps(-10);
+    }
 }
 
 boolean WidgetAltitudeDecreaseButton::isValueChanged()

@@ -32,6 +32,10 @@ void Motor::goToAbsoluteAngle(float angleInDegrees)
     this->stepper.move(moveValue);
 }
 
+void Motor::rotateNSteps(long steps){
+    this->stepper.move(steps);
+}
+
 void Motor::loop()
 {
     if (this->stepper.distanceToGo() != 0)
