@@ -1,6 +1,7 @@
 #include "tracking-object-service.h"
 #include "duration.h"
 #include "gimbal.h"
+#include "laser.h"
 
 ObjectToWatch *TrackingObjectService::trackedObject = nullptr;
 
@@ -21,6 +22,7 @@ void TrackingObjectService::setup(ObjectToWatch *trackedObject)
 {
     TrackingObjectService::isTracking = GPS::currentData.isValid;
     TrackingObjectService::trackedObject = trackedObject;
+    TrackingObjectService::isLaserPointingWanted = false;
 }
 
 void TrackingObjectService::loop()
@@ -48,5 +50,14 @@ void TrackingObjectService::loop()
     {
         Gimbal::altitudeMotor.loop();
         Gimbal::azimuthMotor.loop();
+    }
+
+    if (TrackingObjectService::isLaserPointingWanted)
+    {
+        Laser::on();
+    }
+    else
+    {
+        Laser::off();
     }
 }

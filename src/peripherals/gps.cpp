@@ -40,7 +40,7 @@ void GPS::loop()
     {
       if (GPS::gps.encode(Serial2.read()))
       {
-        Serial.println("GPS::gps.encode(Serial2.read())");
+       // Serial.println("GPS::gps.encode(Serial2.read())");
         if (GPS::gps.location.isValid() && GPS::gps.altitude.isValid())
         {
           GPS::currentData = GPSData(
@@ -58,6 +58,9 @@ void GPS::loop()
               false);
         }
       }
+    }
+    else {
+      yield();
     }
 
     if (millis() > 5000 && GPS::gps.charsProcessed() < 10)

@@ -7,15 +7,16 @@ Motor::Motor(int dirPin,
              String label) : stepsPerRevolution(stepsPerRevolution), label(label)
 {
     this->stepper = AccelStepper(AccelStepper::DRIVER, stepPin, dirPin);
-    this->stepper.setMaxSpeed(1000);    // vit. max en pas/sec
-    this->stepper.setAcceleration(500); // acc. en pas/sec²
+    this->stepper.setMaxSpeed(4000);     // vit. max en pas/sec
+    this->stepper.setAcceleration(2000); // acc. en pas/sec²
     pinMode(enabledPin, OUTPUT);
     digitalWrite(enabledPin, LOW);
 }
 
 void Motor::goToAbsoluteAngle(float angleInDegrees)
 {
-    long destinationSteps = (angleInDegrees / 360.0) * stepsPerRevolution;
+    float motorAngleInDegrees = angleInDegrees < -180.0 ? (360.0 + angleInDegrees) : angleInDegrees;
+    long destinationSteps = (motorAngleInDegrees / 360.0) * stepsPerRevolution;
     long moveValue = destinationSteps - this->stepper.currentPosition();
     String message;
     message += F("Moving motor ");
@@ -32,8 +33,21 @@ void Motor::goToAbsoluteAngle(float angleInDegrees)
     this->stepper.move(moveValue);
 }
 
-void Motor::rotateNSteps(long steps){
+void Motor::rotateNSteps(long steps)
+{
     this->stepper.move(steps);
+}
+
+void Motor::goToHome(float homeAngleInDegrees)
+{
+    this->stepper.setCurrentPosition(0);
+    goToAbsoluteAngle(homeAngleInDegrees);
+    while (this->stepper.distanceToGo() != 0)
+    {
+        this->stepper.run();
+        yield();
+    }
+    this->stepper.setCurrentPosition(0);
 }
 
 void Motor::loop()

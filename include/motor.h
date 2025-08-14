@@ -19,6 +19,7 @@ public:
         String label);
   void goToAbsoluteAngle(float angleInDegrees);
   void rotateNSteps(long steps);
+  void goToHome(float homeAngleInDegrees);
   void loop();
 };
 

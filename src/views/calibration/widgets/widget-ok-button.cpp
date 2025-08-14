@@ -3,6 +3,7 @@
 #include "colors.h"
 #include "image-check.h"
 #include "calibration-view.h"
+#include "gps.h"
 
 WidgetOKButton::WidgetOKButton(
     unsigned int column,
@@ -27,7 +28,7 @@ void WidgetOKButton::draw()
         1,
         1,
         label,
-        buttonStatus);
+        GPS::currentData.isValid ? buttonStatus : UNAVAILABLE);
 
     screen->drawBitmap(
         x + (BUTTON_SIZE - ICON_SIZE) / 2,
@@ -55,7 +56,10 @@ void WidgetOKButton::manageTouchDown()
 
 void WidgetOKButton::manageTouchUp()
 {
-    buttonStatus = DESACTIVATED;
-    draw();
-    CalibrationView::calibrationDone = true;
+    if (GPS::currentData.isValid)
+    {
+        buttonStatus = DESACTIVATED;
+        draw();
+        CalibrationView::calibrationDone = true;
+    }
 }
