@@ -10,6 +10,8 @@ TFT_eSPI tft = TFT_eSPI();
 #include "wifi-connection.h"
 #include "current-view-service.h"
 #include "touch-screen.h"
+#include "joystick.h"
+#include "rgb-led.h"
 
 Screen screen(&tft);
 CurrentViewService currentViewService = CurrentViewService(&tft);
@@ -23,6 +25,7 @@ void gpsUpdateLoop(void *pvParameters)
   while (1)
   {
     // Serial.println("GPS::loop()");
+    Joystick::loop();
     screen.loop();
     currentViewService.loop();
     TouchScreen::loop();
@@ -52,12 +55,20 @@ void lowPriorityLoop(void *pvParameters)
   vTaskDelete(NULL);
 }
 */
+
 void setup()
 {
   Serial.begin(115200);
   Serial.println("setup()");
-  Buzzer::setup();
-  Buzzer::off();
+
+  pinMode(2, OUTPUT);
+
+  digitalWrite(2, LOW); // Buzzer
+  RGBLed::setup();
+
+	  //Buzzer::setup();
+  //Buzzer::off();
+  Joystick::setup();
   TouchScreen::setup(&tft);
   WiFiConnection::setup();
   screen.setup();
@@ -90,5 +101,7 @@ void loop()
   // Serial.println("loop()");
   GPS::loop();
   WiFiConnection::loop();
+  //Serial.println(Joystick::status.toString());
+//delay(500);
   // GPS::loop();
 }

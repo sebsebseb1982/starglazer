@@ -13,6 +13,8 @@
 #include "tracking-object-service.h"
 #include "object-to-watch.h"
 #include "laser.h"
+#include "joystick.h"
+#include "rgb-led.h"
 
 boolean CalibrationView::calibrationDone = false;
 
@@ -24,7 +26,6 @@ CalibrationView::CalibrationView(
 
 void CalibrationView::setup()
 {
-    Laser::on();
     screen->fillScreen(BACKGROUND_COLOR);
 
     widgets.push_back(
@@ -78,6 +79,39 @@ void CalibrationView::setup()
 
 void CalibrationView::loop()
 {
+    if (Joystick::status.zPressed)
+    {
+        Laser::on();
+        RGBLed::green();
+    }
+    else
+    {
+        Laser::off();
+        RGBLed::off();
+    }
+
+    int maxSpeed = 5;
+
+    if (Joystick::status.up.pressed)
+    {
+        Gimbal::altitudeMotor.rotateNSteps(-1.0 * maxSpeed * Joystick::status.up.value);
+    }
+
+    if (Joystick::status.down.pressed)
+    {
+        Gimbal::altitudeMotor.rotateNSteps(maxSpeed * Joystick::status.down.value);
+    }
+
+    if (Joystick::status.left.pressed)
+    {
+        Gimbal::azimuthMotor.rotateNSteps(maxSpeed * Joystick::status.left.value);
+    }
+
+    if (Joystick::status.right.pressed)
+    {
+        Gimbal::azimuthMotor.rotateNSteps(-1.0 * maxSpeed * Joystick::status.right.value);
+    }
+
     if (CalibrationView::calibrationDone)
     {
         Laser::off();

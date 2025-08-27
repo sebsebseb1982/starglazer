@@ -34,4 +34,4 @@
 
 #define SPI_TOUCH_FREQUENCY  2500000
 
-#define TOUCH_CS 21     // Chip select pin (T_CS) of touch screen
+#define TOUCH_CS 13     // Chip select pin (T_CS) of touch screen

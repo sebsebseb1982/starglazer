@@ -55,6 +55,7 @@ void Widget::refresh()
     message += F(" pushed");
     Serial.println(message);
     manageTouchDown();
+    digitalWrite(2, HIGH);
   }
 
   if (previousTouchStatus != touchStatus && !touchStatus)
@@ -65,6 +66,7 @@ void Widget::refresh()
     message += F(" released");
     Serial.println(message);
     manageTouchUp();
+    digitalWrite(2, LOW);
   }
   previousTouchStatus = touchStatus;
 }

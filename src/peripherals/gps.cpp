@@ -20,7 +20,7 @@ unsigned long GPS::startMillis = 0;
 
 void GPS::setup()
 {
-  Serial2.begin(9600, SERIAL_8N1, 0, 4);
+  Serial2.begin(9600, SERIAL_8N1, 34, 4);
 
   GPS::currentData = GPSData(
       0,
