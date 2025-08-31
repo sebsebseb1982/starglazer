@@ -18,10 +18,10 @@ Cf. [pinout.h](/include/pinout.h) and [TFT_eSPI configuration file](Setup21_ILI9
 |------------|----------------|--------------------|-----|-----|----------|----------------|----------|
 |            |                |                    | 3V3 | GND |          |                |          |
 |            |                |                    | EN  | 23  | TFT_MOSI | Screen         |          |
-| Input only | Screen         | PEN (touch detect) | 36  | 22  |          |                |          |
+| Input only | Screen         | PEN (touch detect) | 36  | 22  | I2C_SCL  | WiiMote        |          |
 | Input only |                |                    | 39  | 1   |          |                |          |
 | Input only | GPS            | TX                 | 34  | 3   |          |                |          |
-| Input only |                |                    | 35  | 21  | TOUCH_CS | Screen (touch) |          |
+| Input only |                |                    | 35  | 21  | I2C_SDA  | WiiMote        |          |
 |            | LED            | red                | 32  | GND |          |                |          |
 |            | Motor altitude | direction          | 33  | 19  | TFT_MISO | Screen         |          |
 |            | Motor altitude | step               | 25  | 18  | TFT_SCLK | Screen         |          |
@@ -30,7 +30,7 @@ Cf. [pinout.h](/include/pinout.h) and [TFT_eSPI configuration file](Setup21_ILI9
 |            | Motor azimuth  | step               | 14  | 16  | TFT_RST  | Screen         |          |
 |            | Laser          |                    | 12  | 4   | RX       | GPS            |          |
 |            |                |                    | GND | 0   | green    | LED            |          |
-|            |                |                    | 13  | 2   |          | Buzzer         |          |
+|            | Screen (touch) | TOUCH_CS           | 13  | 2   |          | Buzzer         |          |
 |            |                |                    | 9   | 15  | blue     | LED            |          |
 | Reserved   |                |                    | 10  | 8   |          |                | Reserved |
 | Reserved   |                |                    | 11  | 7   |          |                | Reserved |
@@ -40,20 +40,7 @@ Cf. [pinout.h](/include/pinout.h) and [TFT_eSPI configuration file](Setup21_ILI9
 
 ### RGB terminal block
 
- - Ecran + tactile
-  - CS 5
-  - RST 16
-  - D/C 17
-  - SDI 23
-  - SCK 18
-  - BL 26
-  - SDO Pas branché
- - 2 moteurs pas à pas + detecteur HOME ?
- - Manette Wii
- - Laser
- - GPS
- - Buzzer
- - Led en dessous de l'horizon
+TODO
 
 ### WiiMote extension cord
 
