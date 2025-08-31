@@ -38,9 +38,28 @@ Cf. [pinout.h](/include/pinout.h) and [TFT_eSPI configuration file](Setup21_ILI9
 
  ![Pinout Wroom devkit](/docs/images/doc-esp32-pinout-reference-wroom-devkit.jpg)
 
-### RGB terminal block
+### Terminal blocks
 
-TODO
+![Terminal blocks pinout](/docs/images/terminal-blocks-pinout.png)
+
+| No. | Peripheral | Name               |
+|-----|------------|--------------------|
+| 1   | RGB LED    | red                |
+| 2   | RGB LED    | GND                |
+| 3   | RGB LED    | green              |
+| 4   | RGB LED    | blue               |
+| 5   | Motor      | Altitude direction |
+| 6   | Motor      | Altitude step      |
+| 7   | Motor      | Azimuth direction  |
+| 8   | Motor      | Azimuth step       |
+| 9   | Motor      | GND                |
+| 10  |            |                    |
+| 11  | Laser      | GND                |
+| 12  | Laser      | 5v                 |
+| 13  | WiiMote    | GND                |
+| 14  | WiiMote    | SCL                |
+| 15  | WiiMote    | SDA                |
+| 16  | WiiMote    | 3.3v               |
 
 ### WiiMote extension cord
 
