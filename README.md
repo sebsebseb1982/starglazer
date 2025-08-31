@@ -31,7 +31,7 @@ Cf. [pinout.h](/include/pinout.h) and [TFT_eSPI configuration file](Setup21_ILI9
 |            | Laser          |                    | 12  | 4   | RX       | GPS            |          |
 |            |                |                    | GND | 0   | green    | LED            |          |
 |            | Screen (touch) | TOUCH_CS           | 13  | 2   |          | Buzzer         |          |
-|            |                |                    | 9   | 15  | blue     | LED            |          |
+| Reserved   |                |                    | 9   | 15  | blue     | LED            |          |
 | Reserved   |                |                    | 10  | 8   |          |                | Reserved |
 | Reserved   |                |                    | 11  | 7   |          |                | Reserved |
 | Reserved   |                |                    | 5V  | 6   |          |                | Reserved |
