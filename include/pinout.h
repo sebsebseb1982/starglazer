@@ -17,4 +17,6 @@
 #define MOTOR_AZIMUTH_DIRECTION_PIN 27
 #define MOTOR_AZIMUTH_STEP_PIN 14
 
+#define PEN_PIN 36
+
 #endif

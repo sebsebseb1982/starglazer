@@ -1,6 +1,7 @@
 #include <TFT_eSPI.h>
 #include "touch-screen.h"
 #include "screen.h"
+#include "pinout.h"
 
 TFT_eSPI *TouchScreen::screen = nullptr;
 uint16_t TouchScreen::x = 0;
