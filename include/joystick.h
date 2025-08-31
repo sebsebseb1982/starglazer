@@ -4,7 +4,7 @@
 #include <WiiChuck.h>
 
 #define RAW_MIDDLE_VALUE 128
-#define DEADZONE_VALUE 10
+#define DEADZONE_VALUE 3
 
 class JoystickDirection
 {
