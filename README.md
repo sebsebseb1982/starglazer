@@ -36,6 +36,8 @@
 
  ![Pinout Wroom devkit](/docs/images/doc-esp32-pinout-reference-wroom-devkit.jpg)
 
+Cf. [pinout.h](/src/include/pinout.h).
+
 ### RGB terminal block
 
  - Ecran + tactile
