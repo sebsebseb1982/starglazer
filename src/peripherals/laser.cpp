@@ -1,5 +1,6 @@
 #include <Arduino.h>
 #include "laser.h"
+#include "pinout.h"
 
 void Laser::off()
 {

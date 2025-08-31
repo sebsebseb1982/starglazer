@@ -1,0 +1,20 @@
+#ifndef PINOUT_H
+#define PINOUT_H
+
+#define LASER_PIN 12
+
+#define LED_RED_PIN 32
+#define LED_GREEN_PIN 0
+#define LED_BLUE_PIN 15
+
+#define GPS_SERIAL_TX_PIN 4
+#define GPS_SERIAL_RX_PIN 34
+
+#define BUZZER_PIN 2
+
+#define MOTOR_ALTITUDE_DIRECTION_PIN 33
+#define MOTOR_ALTITUDE_STEP_PIN 25
+#define MOTOR_AZIMUTH_DIRECTION_PIN 27
+#define MOTOR_AZIMUTH_STEP_PIN 14
+
+#endif

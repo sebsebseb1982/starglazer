@@ -1,6 +1,7 @@
 #include <Arduino.h>
 #include "gps.h"
 #include "duration.h"
+#include "pinout.h"
 
 GPSData::GPSData()
 {
@@ -20,7 +21,7 @@ unsigned long GPS::startMillis = 0;
 
 void GPS::setup()
 {
-  Serial2.begin(9600, SERIAL_8N1, 34, 4);
+  Serial2.begin(9600, SERIAL_8N1, GPS_SERIAL_RX_PIN, GPS_SERIAL_TX_PIN);
 
   GPS::currentData = GPSData(
       0,

@@ -15,7 +15,6 @@ public:
   Motor(int dirPin,
         int stepPin,
         int stepsPerRevolution,
-        int enabledPin,
         String label);
   void goToAbsoluteAngle(float angleInDegrees);
   void rotateNSteps(long steps);

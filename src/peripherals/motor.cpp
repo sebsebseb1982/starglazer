@@ -3,14 +3,11 @@
 Motor::Motor(int dirPin,
              int stepPin,
              int stepsPerRevolution,
-             int enabledPin,
              String label) : stepsPerRevolution(stepsPerRevolution), label(label)
 {
     this->stepper = AccelStepper(AccelStepper::DRIVER, stepPin, dirPin);
     this->stepper.setMaxSpeed(4000);     // vit. max en pas/sec
     this->stepper.setAcceleration(2000); // acc. en pas/sec²
-    pinMode(enabledPin, OUTPUT);
-    digitalWrite(enabledPin, LOW);
 }
 
 void Motor::goToAbsoluteAngle(float angleInDegrees)

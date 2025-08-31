@@ -1,14 +1,13 @@
 #include "gimbal.h"
+#include "pinout.h"
 
-Motor Gimbal::altitudeMotor = Motor(33,
-                                25,
+Motor Gimbal::altitudeMotor = Motor(MOTOR_ALTITUDE_DIRECTION_PIN,
+                                MOTOR_ALTITUDE_STEP_PIN,
                                 3200,
-                                32,
                                 "Altitude");
-Motor Gimbal::azimuthMotor = Motor(27,
-                               14,
+Motor Gimbal::azimuthMotor = Motor(MOTOR_AZIMUTH_DIRECTION_PIN,
+                               MOTOR_AZIMUTH_STEP_PIN,
                                3200,
-                               32,
                                "Azimuth");
 
 void Gimbal::loop()

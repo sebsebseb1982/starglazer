@@ -1,4 +1,6 @@
 #include "rgb-led.h"
+#include "pinout.h"
+#include <Arduino.h>
 
 void RGBLed::setup()
 {
