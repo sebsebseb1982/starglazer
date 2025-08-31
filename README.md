@@ -3,12 +3,14 @@
 
 ## How to configure TFT_eSPI library
 
- - Copier Setup21_ILI9488_seb.h dans le dossier User_Setups de la librairie TFT_eSPI
+ - Copier [Setup21_ILI9488_seb.h](Setup21_ILI9488_seb.h) dans le dossier User_Setups de la librairie TFT_eSPI
  - Dans User_Setup_Select.h
    - Commenter #include <User_Setup.h>
    - Ajouter #include <User_Setups/Setup21_ILI9488_seb.h>
 
 ## Pinouts
+
+Cf. [pinout.h](/include/pinout.h) and [TFT_eSPI configuration file](Setup21_ILI9488_seb.h).
 
 ### ESP32
 
@@ -35,8 +37,6 @@
 | Reserved   |            |                    | 5V  | 6   |          |                | Reserved |
 
  ![Pinout Wroom devkit](/docs/images/doc-esp32-pinout-reference-wroom-devkit.jpg)
-
-Cf. [pinout.h](/include/pinout.h).
 
 ### RGB terminal block
 
