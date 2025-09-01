@@ -1,5 +1,5 @@
 #include "current-view-service.h"
-#include "calibration-view.h"
+#include "splash-screen-view.h"
 
 View *CurrentViewService::currentView;
 
@@ -11,7 +11,7 @@ CurrentViewService::CurrentViewService(TFT_eSPI *screen)
 void CurrentViewService::setup()
 {
     changeCurrentView(
-        new CalibrationView(
+        new SplashScreenView(
             this->screen));
 }
 
