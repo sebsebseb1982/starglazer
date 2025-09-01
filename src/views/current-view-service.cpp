@@ -22,7 +22,7 @@ void CurrentViewService::loop()
 
 void CurrentViewService::changeCurrentView(View *newView)
 {
+    newView->setup();
     delete CurrentViewService::currentView;
     CurrentViewService::currentView = newView;
-    CurrentViewService::currentView->setup();
 }

@@ -5,6 +5,7 @@
 #include "calibration-view.h"
 #include "gps.h"
 #include "screen.h"
+#include "image-check.h"
 #include "secrets.h"
 
 SplashScreenView::SplashScreenView(
@@ -16,9 +17,8 @@ SplashScreenView::SplashScreenView(
 void SplashScreenView::setup()
 {
     screen->fillScreen(BACKGROUND_COLOR);
-    screen->setCursor(SCREEN_WIDTH / 2, SCREEN_HEIGHT / 2);
-    screen->print("Initializing...");
-    refreshStatuses();
+    screen->setTextFont(2);
+    refreshStatuses(80, SCREEN_HEIGHT / 2);
 }
 
 void SplashScreenView::loop()
@@ -27,7 +27,7 @@ void SplashScreenView::loop()
     boolean gpsStatus = GPS::currentData.isValid;
     if (wifiStatus != currentWifiStatus || gpsStatus != currentGPSStatus)
     {
-        refreshStatuses();
+        refreshStatuses(80, SCREEN_HEIGHT / 2);
     }
     if (wifiStatus && gpsStatus)
     {
@@ -35,13 +35,13 @@ void SplashScreenView::loop()
             new CalibrationView(
                 this->screen));
     }
+    currentWifiStatus = wifiStatus;
+    currentGPSStatus = gpsStatus;
 }
 
-void SplashScreenView::refreshStatuses()
+void SplashScreenView::refreshStatuses(int xPosition, int yPosition)
 {
-    int lineHeight = 14;
-    int xPostion = 100;
-    int yPosition = SCREEN_HEIGHT / 2 + lineHeight;
+    int lineHeight = 24;
     screen->fillRect(
         0,
         yPosition,
@@ -49,17 +49,38 @@ void SplashScreenView::refreshStatuses()
         SCREEN_HEIGHT - yPosition,
         BACKGROUND_COLOR);
 
-    screen->setCursor(xPostion, yPosition + lineHeight);
+    screen->setCursor(xPosition, yPosition);
+    screen->print("Initializing...");
+
+    screen->setCursor(xPosition, yPosition + lineHeight);
     String wifiMessage;
     wifiMessage += F("Connection to WIFI network \"");
     wifiMessage += WIFI_SSID;
-    wifiMessage += F("\" ... ");
-    wifiMessage += WiFiConnection::isConnected() ? "OK" : "";
+    wifiMessage += F("\"");
     screen->print(wifiMessage);
-    
-    screen->setCursor(xPostion, yPosition + (lineHeight*2));
+    if (WiFiConnection::isConnected())
+    {
+        screen->drawBitmap(
+            xPosition - 50,
+            yPosition + lineHeight,
+            check32x32,
+            32,
+            32,
+            GREEN);
+    }
+
+    screen->setCursor(xPosition, yPosition + (lineHeight * 2));
     String gpsMessage;
-    gpsMessage += F("GPS acquiring satellites ... ");
-    gpsMessage += GPS::currentData.isValid ? "OK" : "";
+    gpsMessage += F("GPS acquiring satellites");
     screen->print(gpsMessage);
+    if (GPS::currentData.isValid)
+    {
+        screen->drawBitmap(
+            xPosition - 50,
+            yPosition + (lineHeight * 2),
+            check32x32,
+            32,
+            32,
+            GREEN);
+    }
 }

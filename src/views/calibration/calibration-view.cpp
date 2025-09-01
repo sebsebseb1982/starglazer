@@ -127,6 +127,8 @@ void CalibrationView::loop()
     {
         for (Widget *widget : widgets)
         {
+            Serial.print("Refresh widget ");
+            Serial.println(widget->label);
             widget->refresh();
         }
         Gimbal::altitudeMotor.loop();

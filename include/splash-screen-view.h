@@ -9,7 +9,7 @@ private:
     TFT_eSPI *screen;
     boolean currentGPSStatus = false;
     boolean currentWifiStatus = false;
-    void refreshStatuses();
+    void refreshStatuses(int xPosition, int yPosition);
 
 public:
     SplashScreenView(TFT_eSPI *screen);
