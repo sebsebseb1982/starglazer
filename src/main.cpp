@@ -70,10 +70,10 @@ void setup()
   //Buzzer::off();
   Joystick::setup();
   TouchScreen::setup(&tft);
-  WiFiConnection::setup();
   screen.setup();
-  GPS::setup();
   currentViewService.setup();
+  GPS::setup();
+  WiFiConnection::setup();
 
   xTaskCreatePinnedToCore(
       gpsUpdateLoop,

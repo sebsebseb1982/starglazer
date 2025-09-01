@@ -7,6 +7,9 @@ class SplashScreenView : public View
 {
 private:
     TFT_eSPI *screen;
+    boolean currentGPSStatus = false;
+    boolean currentWifiStatus = false;
+    void refreshStatuses();
 
 public:
     SplashScreenView(TFT_eSPI *screen);
