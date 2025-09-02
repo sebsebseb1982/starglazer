@@ -148,14 +148,16 @@ void WidgetTrackingStatus::drawDistanceStatus(unsigned int x, unsigned int y)
   String value;
   if (TrackingObjectService::isTracking)
   {
-    value += String(TrackingObjectService::currentEquatorialCoordinates.distance/1000000, 0);
-    value += "M km";
+    char buffer[32];
+    sprintf(buffer, "%.1e", TrackingObjectService::currentEquatorialCoordinates.distance);
+    value += buffer;
+    value += " km";
   }
   else
   {
     value += "waiting ...";
   }
-  screen->setCursor(x + 13, y + STATUS_VALUE_Y);
+  screen->setCursor(x + 5, y + STATUS_VALUE_Y);
   screen->print(value);
 }
 
