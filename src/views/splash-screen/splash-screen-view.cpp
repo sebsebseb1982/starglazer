@@ -61,26 +61,26 @@ void SplashScreenView::refreshStatuses(int xPosition, int yPosition)
     if (WiFiConnection::isConnected())
     {
         screen->drawBitmap(
-            xPosition - 50,
+            xPosition - 22,
             yPosition + lineHeight,
-            check32x32,
-            32,
-            32,
+            check16x16,
+            16,
+            16,
             GREEN);
     }
 
     screen->setCursor(xPosition, yPosition + (lineHeight * 2));
     String gpsMessage;
-    gpsMessage += F("GPS acquiring satellites");
+    gpsMessage += F("GPS acquiring satellites ✓");
     screen->print(gpsMessage);
     if (GPS::currentData.isValid)
     {
         screen->drawBitmap(
-            xPosition - 50,
+            xPosition - 22,
             yPosition + (lineHeight * 2),
-            check32x32,
-            32,
-            32,
+            check16x16,
+            16,
+            16,
             GREEN);
     }
 }
