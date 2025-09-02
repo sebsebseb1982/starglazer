@@ -54,7 +54,7 @@ void SplashScreenView::refreshStatuses(int xPosition, int yPosition)
 
     screen->setCursor(xPosition, yPosition + lineHeight);
     String wifiMessage;
-    wifiMessage += F("Connection to WIFI network \"");
+    wifiMessage += F("Connecting to WIFI network \"");
     wifiMessage += WIFI_SSID;
     wifiMessage += F("\"");
     screen->print(wifiMessage);
@@ -71,7 +71,7 @@ void SplashScreenView::refreshStatuses(int xPosition, int yPosition)
 
     screen->setCursor(xPosition, yPosition + (lineHeight * 2));
     String gpsMessage;
-    gpsMessage += F("GPS acquiring satellites ✓");
+    gpsMessage += F("GPS acquiring satellites");
     screen->print(gpsMessage);
     if (GPS::currentData.isValid)
     {
