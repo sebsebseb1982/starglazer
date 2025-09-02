@@ -34,51 +34,7 @@ void WidgetTrackingStatus::draw()
       rowSpan,
       label,
       UNAVAILABLE);
-  /*
-    int textMarginX = 15;
-    int textMarginY = 67;
-    screen->setTextFont(2);
-
-    String altitude;
-    altitude += F("Altitude : ");
-    if (trackingObjectService->isTracking)
-    {
-      altitude += String(trackingObjectService->currentEquatorialCoordinates.altitude, 1);
-    }
-    else
-    {
-      altitude += "waiting ...";
-    }
-    screen->setCursor(x + textMarginX, y + textMarginY);
-    screen->print(altitude);
-
-    String azimuth;
-    azimuth += F("Azimuth : ");
-    if (trackingObjectService->isTracking)
-    {
-      azimuth += String(trackingObjectService->currentEquatorialCoordinates.azimuth, 1);
-    }
-    else
-    {
-      azimuth += "waiting ...";
-    }
-    screen->setCursor(x + textMarginX, y + textMarginY + 20);
-    screen->print(azimuth);
-
-    String distance;
-    distance += F("Distance : ");
-    if (trackingObjectService->isTracking)
-    {
-      distance += String(trackingObjectService->currentEquatorialCoordinates.distance / 1000000, 0);
-      distance += F(" x 10^6 km");
-    }
-    else
-    {
-      distance += "waiting ...";
-    }
-    screen->setCursor(x + textMarginX, y + textMarginY + 40);
-    screen->print(distance);
-  */
+  
   int separatorYStart = 30;
   int separatorYStop = 110;
 
