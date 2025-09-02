@@ -21,7 +21,7 @@ TaskHandle_t gpsUpdateTask;
 TaskHandle_t lowPriorityTask;
 TaskHandle_t touchScreenObserveTask;
 
-void gpsUpdateLoop(void *pvParameters)
+void updateLoop(void *pvParameters)
 {
   while (1)
   {
@@ -52,8 +52,8 @@ void setup()
   WiFiConnection::setup();
 
   xTaskCreatePinnedToCore(
-      gpsUpdateLoop,
-      "gpsUpdateTask",
+      updateLoop,
+      "updateTask",
       10000,
       NULL,
       5,

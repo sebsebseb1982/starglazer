@@ -2,6 +2,8 @@
 #include "gui.h"
 #include "colors.h"
 #include "image-satellite.h"
+#include "image-saturn.h"
+#include "image-nebula.h"
 #include "choosing-object-view.h"
 
 WidgetChooseObjectButton::WidgetChooseObjectButton(
@@ -34,13 +36,33 @@ void WidgetChooseObjectButton::draw()
         label,
         buttonStatus);
 
-    screen->drawBitmap(
+    uint32_t iconColor = WHITE;
+    int iconSize = 32;
+    if (this->objectToWatch.type == "specials")
+        screen->drawBitmap(
         x + (BUTTON_SIZE - ICON_SIZE) / 2,
         y + ((BUTTON_SIZE - ICON_SIZE) / 2) - 8,
-        satellite32x32,
-        32,
-        32,
-        WHITE);
+            satellite32x32,
+            iconSize,
+            iconSize,
+            iconColor);
+    else if (this->objectToWatch.type == "deep-space-objects")
+        screen->drawBitmap(
+        x + (BUTTON_SIZE - ICON_SIZE) / 2,
+        y + ((BUTTON_SIZE - ICON_SIZE) / 2) - 8,
+            nebula32x32,
+            iconSize,
+            iconSize,
+            iconColor);
+    else if (this->objectToWatch.type == "planets-and-moons")
+        screen->drawBitmap(
+        x + (BUTTON_SIZE - ICON_SIZE) / 2,
+        y + ((BUTTON_SIZE - ICON_SIZE) / 2) - 8,
+            saturn32x32,
+            iconSize,
+            iconSize,
+            iconColor);
+
     previousValue = value;
 }
 

@@ -3,6 +3,8 @@
 #include "colors.h"
 #include "tracking-object-service.h"
 #include "image-saturn.h"
+#include "image-nebula.h"
+#include "image-satellite.h"
 #include "current-view-service.h"
 #include "choosing-object-view.h"
 
@@ -35,13 +37,30 @@ void WidgetTrackedObjectButton::draw()
 
     uint32_t iconColor = VERY_LIGHT_GRAY;
     int iconSize = 32;
-    screen->drawBitmap(
-        x + 20,
-        y + 22,
-        saturn32x32,
-        iconSize,
-        iconSize,
-        iconColor);
+    if (trackedObject->type == "specials")
+        screen->drawBitmap(
+            x + 20,
+            y + 22,
+            satellite32x32,
+            iconSize,
+            iconSize,
+            iconColor);
+    else if (trackedObject->type == "deep-space-objects")
+        screen->drawBitmap(
+            x + 20,
+            y + 22,
+            nebula32x32,
+            iconSize,
+            iconSize,
+            iconColor);
+    else if (trackedObject->type == "planets-and-moons")
+        screen->drawBitmap(
+            x + 20,
+            y + 22,
+            saturn32x32,
+            iconSize,
+            iconSize,
+            iconColor);
 
     String objectLabel = trackedObject->label;
     screen->setCursor(x + iconSize + 30, y + 20);
