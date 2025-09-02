@@ -134,6 +134,11 @@ void CalibrationView::loop()
         Gimbal::altitudeMotor.loop();
         Gimbal::azimuthMotor.loop();
     }
+
+    if (Joystick::status.cPressed)
+    {
+        CalibrationView::calibrationDone = true;
+    }
 }
 
 CalibrationView::~CalibrationView()
