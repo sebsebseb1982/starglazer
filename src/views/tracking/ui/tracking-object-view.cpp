@@ -8,6 +8,7 @@
 #include "widget-api-status.h"
 #include "widget-laser-button.h"
 #include "widget-tracked-object-button.h"
+#include "colors.h"
 
 #include "joystick.h"
 
@@ -21,6 +22,7 @@ TrackingObjectView::TrackingObjectView(
 void TrackingObjectView::setup()
 {
     TrackingObjectService::setup(trackedObject);
+    this->screen->fillScreen(BACKGROUND_COLOR);
     this->widgets[0] = new WidgetGPSStatus(
         4,
         0,
