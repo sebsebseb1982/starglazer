@@ -1,5 +1,6 @@
 #include <UrlEncode.h>
 #include "equatorial-coordinates-service.h"
+#include "secrets.h"
 #define HTTP_RETRY 10
 
 EquatorialCoordinates::EquatorialCoordinates() {
@@ -21,8 +22,10 @@ EquatorialCoordinatesService::EquatorialCoordinatesService()
 }
 
 EquatorialCoordinates EquatorialCoordinatesService::compute(GPSData gpsData, ObjectToWatch *trackedObject) {
+  // TODO à factoriser avec src/api/starglaze-api.cpp
   String skyfieldAPIURL;
-  skyfieldAPIURL += F("http://192.168.1.169:22666/horizontal-coordinates/");
+  skyfieldAPIURL += STARGLAZE_API_HOST;
+  skyfieldAPIURL += F("/horizontal-coordinates/");
   skyfieldAPIURL += trackedObject->type;
   skyfieldAPIURL += F("/");
   skyfieldAPIURL += urlEncode(trackedObject->code);
