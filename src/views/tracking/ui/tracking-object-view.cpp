@@ -9,6 +9,8 @@
 #include "widget-laser-button.h"
 #include "widget-tracked-object-button.h"
 
+#include "joystick.h"
+
 TrackingObjectView::TrackingObjectView(
     TFT_eSPI *screen,
     ObjectToWatch *trackedObject) : trackedObject(trackedObject)
@@ -72,6 +74,7 @@ void TrackingObjectView::setup()
 
 void TrackingObjectView::loop()
 {
+    TrackingObjectService::isLaserPointingWanted = Joystick::status.zPressed;
     TrackingObjectService::loop();
     for (int i = 0; i < widgetNumbers; i++)
     {

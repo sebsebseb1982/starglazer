@@ -120,7 +120,15 @@ void CalibrationView::loop()
             GPS::currentData,
             new ObjectToWatch("deep-space-objects", "* alf UMi", "Polaris"));
         Gimbal::altitudeMotor.goToHome(polarisEquatorialCoordinates.altitude * -1.0);
-        Gimbal::azimuthMotor.goToHome(polarisEquatorialCoordinates.azimuth);
+        if (polarisEquatorialCoordinates.azimuth > 180.0)
+        {
+            Gimbal::azimuthMotor.goToHome((360.0 - polarisEquatorialCoordinates.azimuth) * -1.0);
+        }
+        else
+        {
+            Gimbal::azimuthMotor.goToHome(polarisEquatorialCoordinates.azimuth * -1.0);
+        }
+
         CurrentViewService::changeCurrentView(new ChoosingObjectView(screen));
     }
     else
