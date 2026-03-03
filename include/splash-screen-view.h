@@ -9,6 +9,7 @@ private:
     TFT_eSPI *screen;
     boolean currentGPSStatus = false;
     boolean currentWifiStatus = false;
+    boolean currentWiiMoteStatus = false;
     void refreshStatuses(int xPosition, int yPosition);
 
 public:

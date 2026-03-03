@@ -42,10 +42,8 @@ public:
 
 class Joystick
 {
-private:
-    static Accessory instance;
-
 public:
+    static Accessory instance;
     static JoystickStatus status;
     static void setup();
     static void loop();

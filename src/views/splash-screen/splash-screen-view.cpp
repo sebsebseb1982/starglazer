@@ -5,6 +5,7 @@
 #include "calibration-view.h"
 #include "gps.h"
 #include "screen.h"
+#include "joystick.h"
 #include "image-check.h"
 #include "secrets.h"
 
@@ -25,11 +26,12 @@ void SplashScreenView::loop()
 {
     boolean wifiStatus = WiFiConnection::isConnected();
     boolean gpsStatus = GPS::currentData.isValid;
-    if (wifiStatus != currentWifiStatus || gpsStatus != currentGPSStatus)
+    boolean wiiMoteStatus = Joystick::instance.isConnected();
+    if (wifiStatus != currentWifiStatus || gpsStatus != currentGPSStatus || wiiMoteStatus != currentWiiMoteStatus)
     {
         refreshStatuses(80, SCREEN_HEIGHT / 2);
     }
-    if (wifiStatus && gpsStatus)
+    if (wifiStatus && gpsStatus && wiiMoteStatus)
     {
         CurrentViewService::changeCurrentView(
             new CalibrationView(
@@ -37,6 +39,7 @@ void SplashScreenView::loop()
     }
     currentWifiStatus = wifiStatus;
     currentGPSStatus = gpsStatus;
+    currentWiiMoteStatus = wiiMoteStatus;
 }
 
 void SplashScreenView::refreshStatuses(int xPosition, int yPosition)
@@ -78,6 +81,21 @@ void SplashScreenView::refreshStatuses(int xPosition, int yPosition)
         screen->drawBitmap(
             xPosition - 22,
             yPosition + (lineHeight * 2),
+            check16x16,
+            16,
+            16,
+            GREEN);
+    }
+
+    screen->setCursor(xPosition, yPosition + (lineHeight * 3));
+    String wiiMoteMessage;
+    wiiMoteMessage += F("Waiting for WiiMote");
+    screen->print(wiiMoteMessage);
+    if (Joystick::instance.isConnected())
+    {
+        screen->drawBitmap(
+            xPosition - 22,
+            yPosition + (lineHeight * 3),
             check16x16,
             16,
             16,
