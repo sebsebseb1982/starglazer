@@ -1,11 +1,12 @@
 #include <WiFi.h>
 #include "wifi-connection.h"
+#include "debug.h"
 #include "secrets.h"
 
 unsigned int WiFiConnection::nbConnection = 0;
 
 void WiFiConnection::setup() {
-  Serial.println("WiFiConnection::setup()");
+  DEBUG_PRINTLN("WiFiConnection::setup()");
   WiFi.begin(WIFI_SSID, WIFI_PASSWORD);
   int retry = 0; 
   while (WiFi.status() != WL_CONNECTED) {
@@ -18,8 +19,8 @@ void WiFiConnection::setup() {
     //Serial.print(".");
   }
   nbConnection++;
-  Serial.print("Connecté au WIFI avec l'adresse IP : ");
-  Serial.println(WiFi.localIP());
+  DEBUG_PRINT("Connecté au WIFI avec l'adresse IP : ");
+  DEBUG_PRINTLN(WiFi.localIP());
 }
 
 void WiFiConnection::loop() {

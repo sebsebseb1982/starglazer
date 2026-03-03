@@ -1,4 +1,5 @@
 #include "widget.h"
+#include "debug.h"
 #include "screen.h"
 #include "touch-screen.h"
 #include "motor.h"
@@ -37,7 +38,7 @@ void Widget::refresh()
   unsigned long refreshValueDurationInMs = 0;
   if (currentMillis - startMillis >= refreshPeriodInMs)
   {
-    Serial.println(label);
+    DEBUG_PRINTLN(label);
     refreshValue();
     startMillis = currentMillis;
   }
@@ -54,7 +55,7 @@ void Widget::refresh()
     message += F("Button ");
     message += label;
     message += F(" pushed");
-    Serial.println(message);
+    DEBUG_PRINTLN(message);
     manageTouchDown();
   }
 
@@ -64,7 +65,7 @@ void Widget::refresh()
     message += F("Button ");
     message += label;
     message += F(" released");
-    Serial.println(message);
+    DEBUG_PRINTLN(message);
     manageTouchUp();
   }
   previousTouchStatus = touchStatus;
@@ -85,7 +86,7 @@ boolean Widget::isTouched()
     message += F("Button ");
     message += label;
     message += F(" touched");
-    Serial.println(message);
+    DEBUG_PRINTLN(message);
   }
 
   return isTouched;

@@ -1,4 +1,5 @@
 #include "joystick.h"
+#include "debug.h"
 
 JoystickDirection::JoystickDirection() {};
 

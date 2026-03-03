@@ -1,4 +1,5 @@
 #include "motor.h"
+#include "debug.h"
 
 Motor::Motor(int dirPin,
              int stepPin,
@@ -26,7 +27,7 @@ void Motor::goToAbsoluteAngle(float angleInDegrees)
     message += destinationSteps;
     message += F(" currentPosition = ");
     message += this->stepper.currentPosition();
-    Serial.println(message);
+        DEBUG_PRINTLN(message);
     this->stepper.move(moveValue);
 }
 

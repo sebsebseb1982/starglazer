@@ -1,5 +1,6 @@
 #include <TFT_eSPI.h>
 #include "touch-screen.h"
+#include "debug.h"
 #include "screen.h"
 #include "pinout.h"
 

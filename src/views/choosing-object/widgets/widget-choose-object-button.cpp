@@ -1,4 +1,5 @@
 #include "widget-choose-object-button.h"
+#include "debug.h"
 #include "gui.h"
 #include "colors.h"
 #include "image-satellite.h"
@@ -27,7 +28,7 @@ void WidgetChooseObjectButton::draw()
     String message;
     message += F("WidgetChooseObjectButton::draw() ");
     message += this->objectToWatch.label;
-    Serial.println(message);
+        DEBUG_PRINTLN(message);
     gui.drawButton(
         x,
         y,
@@ -89,6 +90,6 @@ void WidgetChooseObjectButton::manageTouchUp()
     String message;
     message += F("Object choosen ");
     message += this->objectToWatch.label;
-    Serial.println(message);
+        DEBUG_PRINTLN(message);
     ChoosingObjectView::objectToWatch = this->objectToWatch;
 }

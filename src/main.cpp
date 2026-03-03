@@ -13,6 +13,7 @@ TFT_eSPI tft = TFT_eSPI();
 #include "joystick.h"
 #include "rgb-led.h"
 #include "laser.h"
+#include "debug.h"
 
 Screen screen(&tft);
 CurrentViewService currentViewService = CurrentViewService(&tft);
@@ -37,7 +38,7 @@ void updateLoop(void *pvParameters)
 void setup()
 {
   Serial.begin(115200);
-  Serial.println("setup()");
+  DEBUG_PRINTLN("setup()");
 
   pinMode(2, OUTPUT);
 
@@ -60,7 +61,7 @@ void setup()
       &gpsUpdateTask,
       0);
 
-  Serial.println("Application ready !");
+  DEBUG_PRINTLN("Application ready !");
 }
 
 void loop()

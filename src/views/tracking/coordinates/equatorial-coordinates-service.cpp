@@ -1,5 +1,6 @@
 #include <UrlEncode.h>
 #include "equatorial-coordinates-service.h"
+#include "debug.h"
 #include "secrets.h"
 #define HTTP_RETRY 10
 
@@ -51,8 +52,8 @@ EquatorialCoordinates EquatorialCoordinatesService::compute(GPSData gpsData, Obj
     this->http.end();
     DeserializationError error = deserializeJson(this->doc, response);
     if (error) {
-      Serial.print(F("deserializeJson() failed: "));
-      Serial.println(error.c_str());
+        DEBUG_PRINT(F("deserializeJson() failed: "));
+        DEBUG_PRINTLN(error.c_str());
       return EquatorialCoordinates();
     }
     return EquatorialCoordinates(
@@ -64,7 +65,7 @@ EquatorialCoordinates EquatorialCoordinatesService::compute(GPSData gpsData, Obj
     String error;
     error += F("KO -> code erreur = ");
     error += String(httpCode);
-    Serial.println(error);
+      DEBUG_PRINTLN(error);
     this->http.end();
     return EquatorialCoordinates();
   }

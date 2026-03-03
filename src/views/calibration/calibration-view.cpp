@@ -1,4 +1,5 @@
 #include "calibration-view.h"
+#include "debug.h"
 #include "colors.h"
 #include "duration.h"
 #include "widget-ok-button.h"
@@ -135,8 +136,8 @@ void CalibrationView::loop()
     {
         for (Widget *widget : widgets)
         {
-            Serial.print("Refresh widget ");
-            Serial.println(widget->label);
+            DEBUG_PRINT("Refresh widget ");
+            DEBUG_PRINTLN(widget->label);
             widget->refresh();
         }
         Gimbal::altitudeMotor.loop();

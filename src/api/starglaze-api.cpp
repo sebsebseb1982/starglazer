@@ -1,4 +1,5 @@
 #include "starglaze-api.h"
+#include "debug.h"
 #include "secrets.h"
 
 StarGlazeAPI::StarGlazeAPI()
@@ -51,8 +52,8 @@ Catalog StarGlazeAPI::getCatalog()
         DeserializationError error = deserializeJson(this->doc, response);
         if (error)
         {
-            Serial.print(F("deserializeJson() failed: "));
-            Serial.println(error.c_str());
+            DEBUG_PRINT(F("deserializeJson() failed: "));
+            DEBUG_PRINTLN(error.c_str());
             return Catalog();
         }
         Catalog catalog = Catalog();
@@ -81,7 +82,7 @@ Catalog StarGlazeAPI::getCatalog()
         String error;
         error += F("KO -> code erreur = ");
         error += String(httpCode);
-        Serial.println(error);
+        DEBUG_PRINTLN(error);
         this->http.end();
         return Catalog();
     }

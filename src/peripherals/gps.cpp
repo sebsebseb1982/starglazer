@@ -1,5 +1,6 @@
 #include <Arduino.h>
 #include "gps.h"
+#include "debug.h"
 #include "duration.h"
 #include "pinout.h"
 
@@ -65,7 +66,7 @@ void GPS::loop()
     }
 
     if (millis() > 5000 && GPS::gps.charsProcessed() < 10)
-      Serial.println(F("No GPS data received: check wiring"));
+        DEBUG_PRINTLN(F("No GPS data received: check wiring"));
 
     startMillis = currentMillis;
   }
