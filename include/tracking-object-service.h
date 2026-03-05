@@ -9,9 +9,8 @@ class TrackingObjectService
 {
 private:
     static ObjectToWatch *trackedObject;
-    static EquatorialCoordinatesService &equatorialCoordinatesService;
-    static EquatorialCoordinatesService &getEquatorialCoordinatesServiceInstance();
     static unsigned long startMillis;
+    static bool pendingCoordinatesRequest;
 
 public:
     static EquatorialCoordinates currentEquatorialCoordinates;

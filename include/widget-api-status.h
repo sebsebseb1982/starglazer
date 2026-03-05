@@ -2,14 +2,13 @@
 #include <TFT_eSPI.h>
 
 #include "widget.h"
-#include "starglaze-api.h"
 
 class WidgetAPIStatus : public Widget
 {
 private:
   boolean currentAPIStatus;
   boolean previousAPIStatus;
-  StarGlazeAPI *starGlazeAPI;
+  boolean pendingHealthRequest;
 
 public:
   ~WidgetAPIStatus();

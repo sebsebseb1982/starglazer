@@ -4,11 +4,15 @@
 Motor::Motor(int dirPin,
              int stepPin,
              int stepsPerRevolution,
-             String label) : stepsPerRevolution(stepsPerRevolution), label(label)
+             String label) : stepsPerRevolution(stepsPerRevolution),
+                             label(label),
+                             mux(portMUX_INITIALIZER_UNLOCKED),
+                             homingInProgress(false),
+                             homingComplete(false)
 {
     this->stepper = AccelStepper(AccelStepper::DRIVER, stepPin, dirPin);
-    this->stepper.setMaxSpeed(4000);     // vit. max en pas/sec
-    this->stepper.setAcceleration(2000); // acc. en pas/sec²
+    this->stepper.setMaxSpeed(4000);
+    this->stepper.setAcceleration(2000);
 }
 
 void Motor::goToAbsoluteAngle(float angleInDegrees)
@@ -27,31 +31,45 @@ void Motor::goToAbsoluteAngle(float angleInDegrees)
     message += destinationSteps;
     message += F(" currentPosition = ");
     message += this->stepper.currentPosition();
-        DEBUG_PRINTLN(message);
+    DEBUG_PRINTLN(message);
+    portENTER_CRITICAL(&mux);
     this->stepper.move(moveValue);
+    portEXIT_CRITICAL(&mux);
 }
 
 void Motor::rotateNSteps(long steps)
 {
+    portENTER_CRITICAL(&mux);
     this->stepper.move(steps);
+    portEXIT_CRITICAL(&mux);
 }
 
 void Motor::goToHome(float homeAngleInDegrees)
 {
+    portENTER_CRITICAL(&mux);
     this->stepper.setCurrentPosition(0);
+    portEXIT_CRITICAL(&mux);
+    homingComplete = false;
+    homingInProgress = true;
     goToAbsoluteAngle(homeAngleInDegrees);
-    while (this->stepper.distanceToGo() != 0)
-    {
-        this->stepper.run();
-        yield();
-    }
-    this->stepper.setCurrentPosition(0);
 }
 
 void Motor::loop()
 {
+    portENTER_CRITICAL(&mux);
     if (this->stepper.distanceToGo() != 0)
     {
         this->stepper.run();
+    }
+    bool reachedTarget = homingInProgress && (this->stepper.distanceToGo() == 0);
+    portEXIT_CRITICAL(&mux);
+
+    if (reachedTarget)
+    {
+        portENTER_CRITICAL(&mux);
+        this->stepper.setCurrentPosition(0);
+        portEXIT_CRITICAL(&mux);
+        homingInProgress = false;
+        homingComplete = true;
     }
 }

@@ -1,4 +1,5 @@
 #include "widget-api-status.h"
+#include "network-queue.h"
 #include "gui.h"
 #include "colors.h"
 #include "image-cog.h"
@@ -15,9 +16,11 @@ WidgetAPIStatus::WidgetAPIStatus(
                                               1,
                                               label,
                                               screen,
-                                              refreshPeriodInMs)
+                                              refreshPeriodInMs),
+                                       currentAPIStatus(false),
+                                       previousAPIStatus(false),
+                                       pendingHealthRequest(false)
 {
-  this->starGlazeAPI = new StarGlazeAPI();
 }
 
 void WidgetAPIStatus::draw()
@@ -30,12 +33,7 @@ void WidgetAPIStatus::draw()
       label,
       UNAVAILABLE);
 
-  int textMarginX = 15;
-  int textMarginY = 67;
-  screen->setTextFont(2);
-
   int imageSize = 32;
-
   screen->drawBitmap(
       x + (BUTTON_SIZE - ICON_SIZE) / 2,
       y + ((BUTTON_SIZE - ICON_SIZE) / 2) - 8,
@@ -49,7 +47,20 @@ void WidgetAPIStatus::draw()
 
 void WidgetAPIStatus::refreshValue()
 {
-  this->currentAPIStatus = starGlazeAPI->health();
+  // Collect result from network task if available
+  bool healthy;
+  if (NetworkQueue::tryGetHealth(healthy))
+  {
+    currentAPIStatus = healthy;
+    pendingHealthRequest = false;
+  }
+
+  // Send a new request only if not already pending
+  if (!pendingHealthRequest)
+  {
+    NetworkQueue::sendHealthRequest();
+    pendingHealthRequest = true;
+  }
 }
 
 boolean WidgetAPIStatus::isValueChanged()
@@ -67,5 +78,4 @@ void WidgetAPIStatus::manageTouchUp()
 
 WidgetAPIStatus::~WidgetAPIStatus()
 {
-  delete this->starGlazeAPI;
 }

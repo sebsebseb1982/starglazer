@@ -1,4 +1,5 @@
 #include "calibration-view.h"
+#include "network-queue.h"
 #include "debug.h"
 #include "colors.h"
 #include "duration.h"
@@ -11,16 +12,17 @@
 #include "current-view-service.h"
 #include "choosing-object-view.h"
 #include "gimbal.h"
-#include "tracking-object-service.h"
 #include "object-to-watch.h"
 #include "laser.h"
 #include "joystick.h"
 #include "rgb-led.h"
+#include "gps.h"
 
 boolean CalibrationView::calibrationDone = false;
 
 CalibrationView::CalibrationView(
-    TFT_eSPI *screen)
+    TFT_eSPI *screen) : state(CALIBRATION_STATE_CALIBRATING),
+                        coordinatesRequestSent(false)
 {
     this->screen = screen;
 }
@@ -28,6 +30,7 @@ CalibrationView::CalibrationView(
 void CalibrationView::setup()
 {
     screen->fillScreen(BACKGROUND_COLOR);
+    CalibrationView::calibrationDone = false;
 
     widgets.push_back(
         new WidgetOKButton(
@@ -80,73 +83,90 @@ void CalibrationView::setup()
 
 void CalibrationView::loop()
 {
-    if (Joystick::status.zPressed)
+    switch (state)
     {
-        Laser::on();
-        RGBLed::green();
-    }
-    else
+    case CALIBRATION_STATE_CALIBRATING:
     {
-        Laser::off();
-        RGBLed::off();
-    }
-
-    int maxSpeed = 5;
-
-    if (Joystick::status.up.pressed)
-    {
-        Gimbal::altitudeMotor.rotateNSteps(-1.0 * maxSpeed * Joystick::status.up.value);
-    }
-
-    if (Joystick::status.down.pressed)
-    {
-        Gimbal::altitudeMotor.rotateNSteps(maxSpeed * Joystick::status.down.value);
-    }
-
-    if (Joystick::status.left.pressed)
-    {
-        Gimbal::azimuthMotor.rotateNSteps(maxSpeed * Joystick::status.left.value);
-    }
-
-    if (Joystick::status.right.pressed)
-    {
-        Gimbal::azimuthMotor.rotateNSteps(-1.0 * maxSpeed * Joystick::status.right.value);
-    }
-
-    if (CalibrationView::calibrationDone)
-    {
-        Laser::off();
-        static EquatorialCoordinatesService equatorialCoordinatesService;
-        EquatorialCoordinates polarisEquatorialCoordinates = equatorialCoordinatesService.compute(
-            GPS::currentData,
-            new ObjectToWatch("deep-space-objects", "* alf UMi", "Polaris"));
-        Gimbal::altitudeMotor.goToHome(polarisEquatorialCoordinates.altitude * -1.0);
-        if (polarisEquatorialCoordinates.azimuth > 180.0)
+        if (Joystick::status.zPressed)
         {
-            Gimbal::azimuthMotor.goToHome((360.0 - polarisEquatorialCoordinates.azimuth) * -1.0);
+            Laser::on();
+            RGBLed::green();
         }
         else
         {
-            Gimbal::azimuthMotor.goToHome(polarisEquatorialCoordinates.azimuth * -1.0);
+            Laser::off();
+            RGBLed::off();
         }
 
-        CurrentViewService::changeCurrentView(new ChoosingObjectView(screen));
-    }
-    else
-    {
-        for (Widget *widget : widgets)
+        int maxSpeed = 5;
+        if (Joystick::status.up.pressed)
+            Gimbal::altitudeMotor.rotateNSteps(-1.0 * maxSpeed * Joystick::status.up.value);
+        if (Joystick::status.down.pressed)
+            Gimbal::altitudeMotor.rotateNSteps(maxSpeed * Joystick::status.down.value);
+        if (Joystick::status.left.pressed)
+            Gimbal::azimuthMotor.rotateNSteps(maxSpeed * Joystick::status.left.value);
+        if (Joystick::status.right.pressed)
+            Gimbal::azimuthMotor.rotateNSteps(-1.0 * maxSpeed * Joystick::status.right.value);
+
+        if (Joystick::status.cPressed)
+            CalibrationView::calibrationDone = true;
+
+        if (CalibrationView::calibrationDone)
         {
-            DEBUG_PRINT("Refresh widget ");
-            DEBUG_PRINTLN(widget->label);
-            widget->refresh();
+            Laser::off();
+            RGBLed::off();
+            coordinatesRequestSent = false;
+            Gimbal::altitudeMotor.homingComplete = false;
+            Gimbal::azimuthMotor.homingComplete = false;
+            state = CALIBRATION_STATE_WAITING_COORDS;
         }
-        Gimbal::altitudeMotor.loop();
-        Gimbal::azimuthMotor.loop();
+        else
+        {
+            for (Widget *widget : widgets)
+            {
+                DEBUG_PRINT("Refresh widget ");
+                DEBUG_PRINTLN(widget->label);
+                widget->refresh();
+            }
+        }
+        break;
     }
 
-    if (Joystick::status.cPressed)
+    case CALIBRATION_STATE_WAITING_COORDS:
     {
-        CalibrationView::calibrationDone = true;
+        if (!coordinatesRequestSent)
+        {
+            ObjectToWatch polaris("deep-space-objects", "* alf UMi", "Polaris");
+            NetworkQueue::sendComputeRequest(GPS::getDataSafe(), &polaris);
+            coordinatesRequestSent = true;
+            DEBUG_PRINTLN("CalibrationView: waiting for Polaris coordinates");
+        }
+
+        EquatorialCoordinates coords;
+        if (NetworkQueue::tryGetCoordinates(coords))
+        {
+            float altHome = coords.altitude * -1.0;
+            float azHome = coords.azimuth > 180.0
+                               ? (360.0 - coords.azimuth) * -1.0
+                               : coords.azimuth * -1.0;
+            Gimbal::altitudeMotor.goToHome(altHome);
+            Gimbal::azimuthMotor.goToHome(azHome);
+            state = CALIBRATION_STATE_HOMING;
+            DEBUG_PRINTLN("CalibrationView: homing started");
+        }
+        break;
+    }
+
+    case CALIBRATION_STATE_HOMING:
+        if (Gimbal::altitudeMotor.homingComplete && Gimbal::azimuthMotor.homingComplete)
+        {
+            state = CALIBRATION_STATE_DONE;
+        }
+        break;
+
+    case CALIBRATION_STATE_DONE:
+        CurrentViewService::changeCurrentView(new ChoosingObjectView(screen));
+        break;
     }
 }
 

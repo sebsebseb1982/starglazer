@@ -1,55 +1,53 @@
 #include "tracking-object-service.h"
+#include "network-queue.h"
 #include "duration.h"
 #include "gimbal.h"
 #include "laser.h"
+#include "gps.h"
 
 ObjectToWatch *TrackingObjectService::trackedObject = nullptr;
-
 EquatorialCoordinates TrackingObjectService::currentEquatorialCoordinates;
 boolean TrackingObjectService::isTracking = false;
 boolean TrackingObjectService::isLaserPointingWanted = true;
-EquatorialCoordinatesService &TrackingObjectService::equatorialCoordinatesService = getEquatorialCoordinatesServiceInstance();
-
-EquatorialCoordinatesService &TrackingObjectService::getEquatorialCoordinatesServiceInstance()
-{
-    static EquatorialCoordinatesService instance;
-    return instance;
-}
-
 unsigned long TrackingObjectService::startMillis = 0;
+bool TrackingObjectService::pendingCoordinatesRequest = false;
 
 void TrackingObjectService::setup(ObjectToWatch *trackedObject)
 {
-    TrackingObjectService::isTracking = GPS::currentData.isValid;
+    TrackingObjectService::isTracking = GPS::getDataSafe().isValid;
     TrackingObjectService::trackedObject = trackedObject;
     TrackingObjectService::isLaserPointingWanted = false;
+    TrackingObjectService::pendingCoordinatesRequest = false;
+    TrackingObjectService::startMillis = 0;
 }
 
 void TrackingObjectService::loop()
 {
-    if (GPS::currentData.isValid)
+    // Collect coordinate result if available
+    EquatorialCoordinates newCoords;
+    if (NetworkQueue::tryGetCoordinates(newCoords))
     {
-        unsigned long currentMillis = millis();
+        currentEquatorialCoordinates = newCoords;
+        Gimbal::altitudeMotor.goToAbsoluteAngle(currentEquatorialCoordinates.altitude);
+        Gimbal::azimuthMotor.goToAbsoluteAngle(currentEquatorialCoordinates.azimuth * -1.0);
+        pendingCoordinatesRequest = false;
+    }
 
-        if (currentMillis - startMillis >= FIVE_SECONDS)
+    GPSData gpsData = GPS::getDataSafe();
+    if (gpsData.isValid)
+    {
+        isTracking = true;
+        unsigned long currentMillis = millis();
+        if (!pendingCoordinatesRequest && (currentMillis - startMillis >= FIVE_SECONDS))
         {
-            TrackingObjectService::currentEquatorialCoordinates = TrackingObjectService::equatorialCoordinatesService.compute(
-                GPS::currentData,
-                TrackingObjectService::trackedObject);
-            Gimbal::altitudeMotor.goToAbsoluteAngle(currentEquatorialCoordinates.altitude);
-            Gimbal::azimuthMotor.goToAbsoluteAngle(currentEquatorialCoordinates.azimuth * -1.0);
+            NetworkQueue::sendComputeRequest(gpsData, TrackingObjectService::trackedObject);
+            pendingCoordinatesRequest = true;
             startMillis = currentMillis;
         }
     }
     else
     {
-        TrackingObjectService::isTracking = false;
-    }
-
-    if (TrackingObjectService::isTracking)
-    {
-        Gimbal::altitudeMotor.loop();
-        Gimbal::azimuthMotor.loop();
+        isTracking = false;
     }
 
     if (TrackingObjectService::isLaserPointingWanted)

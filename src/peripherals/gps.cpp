@@ -19,10 +19,12 @@ GPSData::GPSData(float latitudeInDegrees, float longitudeInDegrees, float elevat
 TinyGPSPlus GPS::gps;
 GPSData GPS::currentData;
 unsigned long GPS::startMillis = 0;
+SemaphoreHandle_t GPS::dataMutex = nullptr;
 
 void GPS::setup()
 {
   Serial2.begin(9600, SERIAL_8N1, GPS_SERIAL_RX_PIN, GPS_SERIAL_TX_PIN);
+  GPS::dataMutex = xSemaphoreCreateMutex();
 
   GPS::currentData = GPSData(
       0,
@@ -45,19 +47,25 @@ void GPS::loop()
        // Serial.println("GPS::gps.encode(Serial2.read())");
         if (GPS::gps.location.isValid() && GPS::gps.altitude.isValid())
         {
-          GPS::currentData = GPSData(
+          GPSData newData(
               gps.location.lat(),
               gps.location.lng(),
               gps.altitude.meters(),
               true);
+          if (xSemaphoreTake(GPS::dataMutex, pdMS_TO_TICKS(50)) == pdTRUE)
+          {
+            GPS::currentData = newData;
+            xSemaphoreGive(GPS::dataMutex);
+          }
         }
         else
         {
-          GPS::currentData = GPSData(
-              0,
-              0,
-              0,
-              false);
+          GPSData newData(0, 0, 0, false);
+          if (xSemaphoreTake(GPS::dataMutex, pdMS_TO_TICKS(50)) == pdTRUE)
+          {
+            GPS::currentData = newData;
+            xSemaphoreGive(GPS::dataMutex);
+          }
         }
       }
     }
@@ -70,4 +78,18 @@ void GPS::loop()
 
     startMillis = currentMillis;
   }
+}
+
+GPSData GPS::getDataSafe()
+{
+  if (GPS::dataMutex == nullptr)
+    return GPS::currentData;
+
+  GPSData copy;
+  if (xSemaphoreTake(GPS::dataMutex, pdMS_TO_TICKS(20)) == pdTRUE)
+  {
+    copy = GPS::currentData;
+    xSemaphoreGive(GPS::dataMutex);
+  }
+  return copy;
 }

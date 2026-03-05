@@ -12,6 +12,10 @@ private:
     TFT_eSPI *screen;
     std::list<Widget *> widgets;
     Catalog catalog;
+    bool catalogLoaded;
+    bool widgetsInitialized;
+
+    void buildWidgets();
 
 public:
     static ObjectToWatch objectToWatch;

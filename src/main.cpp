@@ -14,6 +14,8 @@ TFT_eSPI tft = TFT_eSPI();
 #include "rgb-led.h"
 #include "laser.h"
 #include "debug.h"
+#include "gimbal.h"
+#include "network-queue.h"
 
 Screen screen(&tft);
 CurrentViewService currentViewService = CurrentViewService(&tft);
@@ -30,6 +32,7 @@ void updateLoop(void *pvParameters)
     screen.loop();
     currentViewService.loop();
     TouchScreen::loop();
+    Gimbal::loop();  // Motor stepping — called once per UI iteration
     vTaskDelay(1);
   }
   vTaskDelete(NULL);
@@ -51,6 +54,7 @@ void setup()
   currentViewService.setup();
   GPS::setup();
   WiFiConnection::setup();
+  NetworkQueue::setup();  // Starts async network task on Core 1
 
   xTaskCreatePinnedToCore(
       updateLoop,
@@ -68,4 +72,5 @@ void loop()
 {
   GPS::loop();
   WiFiConnection::loop();
+  vTaskDelay(1);  // Yield to allow GPS/WiFi tasks and networkTask to share Core 1
 }
