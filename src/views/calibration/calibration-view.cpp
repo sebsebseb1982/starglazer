@@ -11,6 +11,7 @@
 #include "widget-gps-status.h"
 #include "current-view-service.h"
 #include "choosing-object-view.h"
+#include "tracking-object-view.h"
 #include "gimbal.h"
 #include "object-to-watch.h"
 #include "laser.h"
@@ -22,7 +23,18 @@ boolean CalibrationView::calibrationDone = false;
 
 CalibrationView::CalibrationView(
     TFT_eSPI *screen) : state(CALIBRATION_STATE_CALIBRATING),
-                        coordinatesRequestSent(false)
+                        coordinatesRequestSent(false),
+                        polarisCoordsReceived(false),
+                        returnToObject(nullptr)
+{
+    this->screen = screen;
+}
+
+CalibrationView::CalibrationView(
+    TFT_eSPI *screen, ObjectToWatch *returnToObject) : state(CALIBRATION_STATE_RESTORING_POSITION),
+                                                       coordinatesRequestSent(false),
+                                                       polarisCoordsReceived(false),
+                                                       returnToObject(returnToObject)
 {
     this->screen = screen;
 }
@@ -85,6 +97,39 @@ void CalibrationView::loop()
 {
     switch (state)
     {
+    case CALIBRATION_STATE_RESTORING_POSITION:
+    {
+        if (!coordinatesRequestSent)
+        {
+            ObjectToWatch polaris("deep-space-objects", "* alf UMi", "Polaris");
+            NetworkQueue::sendComputeRequest(GPS::getDataSafe(), &polaris);
+            coordinatesRequestSent = true;
+            DEBUG_PRINTLN("CalibrationView: restoring Polaris position");
+        }
+
+        EquatorialCoordinates coords;
+        if (!polarisCoordsReceived && NetworkQueue::tryGetCoordinates(coords))
+        {
+            Gimbal::altitudeMotor.goToAbsoluteAngle(coords.altitude);
+            Gimbal::azimuthMotor.goToAbsoluteAngle(coords.azimuth * -1.0);
+            Laser::on();
+            RGBLed::green();
+            polarisCoordsReceived = true;
+            DEBUG_PRINTLN("CalibrationView: moving to Polaris");
+        }
+
+        if (polarisCoordsReceived &&
+            !Gimbal::altitudeMotor.isMoving() &&
+            !Gimbal::azimuthMotor.isMoving())
+        {
+            coordinatesRequestSent = false;
+            polarisCoordsReceived = false;
+            state = CALIBRATION_STATE_CALIBRATING;
+            DEBUG_PRINTLN("CalibrationView: at Polaris, ready to calibrate");
+        }
+        break;
+    }
+
     case CALIBRATION_STATE_CALIBRATING:
     {
         if (Joystick::status.zPressed)
@@ -165,7 +210,16 @@ void CalibrationView::loop()
         break;
 
     case CALIBRATION_STATE_DONE:
-        CurrentViewService::changeCurrentView(new ChoosingObjectView(screen));
+        if (returnToObject != nullptr)
+        {
+            ObjectToWatch *obj = returnToObject;
+            returnToObject = nullptr;
+            CurrentViewService::changeCurrentView(new TrackingObjectView(screen, obj));
+        }
+        else
+        {
+            CurrentViewService::changeCurrentView(new ChoosingObjectView(screen));
+        }
         break;
     }
 }
@@ -175,5 +229,10 @@ CalibrationView::~CalibrationView()
     for (Widget *widget : widgets)
     {
         delete widget;
+    }
+    if (returnToObject != nullptr)
+    {
+        delete returnToObject;
+        returnToObject = nullptr;
     }
 }

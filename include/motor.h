@@ -24,6 +24,7 @@ public:
   // Non-blocking: sets target and returns immediately.
   // Check homingComplete flag to know when done.
   void goToHome(float homeAngleInDegrees);
+  bool isMoving();
   void loop();
 };
 

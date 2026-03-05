@@ -54,6 +54,14 @@ void Motor::goToHome(float homeAngleInDegrees)
     goToAbsoluteAngle(homeAngleInDegrees);
 }
 
+bool Motor::isMoving()
+{
+    portENTER_CRITICAL(&mux);
+    bool moving = this->stepper.distanceToGo() != 0;
+    portEXIT_CRITICAL(&mux);
+    return moving;
+}
+
 void Motor::loop()
 {
     portENTER_CRITICAL(&mux);

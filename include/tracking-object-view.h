@@ -5,7 +5,7 @@
 #include "widget.h"
 #include "tracking-object-service.h"
 
-#define widgetNumbers 7
+#define widgetNumbers 8
 
 class TrackingObjectView : public View
 {

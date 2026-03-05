@@ -8,6 +8,7 @@
 #include "widget-api-status.h"
 #include "widget-laser-button.h"
 #include "widget-tracked-object-button.h"
+#include "widget-recalibrate-button.h"
 #include "colors.h"
 
 #include "joystick.h"
@@ -67,6 +68,13 @@ void TrackingObjectView::setup()
         this->screen,
         this->trackedObject,
         THREE_HOURS);
+    this->widgets[7] = new WidgetRecalibrateButton(
+        3,
+        3,
+        "Calibrate",
+        this->screen,
+        this->trackedObject,
+        HUNDRED_MILLISECONDS);
 
     for (int i = 0; i < widgetNumbers; i++)
     {
