@@ -2,7 +2,7 @@
 #include "equatorial-coordinates-service.h"
 #include "debug.h"
 #include "secrets.h"
-#define HTTP_RETRY 10
+#define HTTP_RETRY 3
 
 EquatorialCoordinates::EquatorialCoordinates() {
 }
@@ -19,7 +19,7 @@ EquatorialCoordinates::EquatorialCoordinates(
 EquatorialCoordinatesService::EquatorialCoordinatesService()
   : doc() {
   this->http.setConnectTimeout(2000);
-  this->http.setTimeout(5000);
+  this->http.setTimeout(15000);
 }
 
 EquatorialCoordinates EquatorialCoordinatesService::compute(GPSData gpsData, ObjectToWatch *trackedObject) {
@@ -45,7 +45,7 @@ EquatorialCoordinates EquatorialCoordinatesService::compute(GPSData gpsData, Obj
     //yield();
     httpCode = this->http.GET();
     retry++;
-  } while (httpCode <= 0 && retry < HTTP_RETRY);
+  } while (httpCode <= 0 && httpCode != HTTPC_ERROR_READ_TIMEOUT && retry < HTTP_RETRY);
 
   if (httpCode > 0) {
     String response = this->http.getString();
