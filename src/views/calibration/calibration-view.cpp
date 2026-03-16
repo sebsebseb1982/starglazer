@@ -10,33 +10,55 @@
 #include "widget-azimuth-increase-button.h"
 #include "widget-gps-status.h"
 #include "current-view-service.h"
+#include "choose-calibration-star-view.h"
 #include "choosing-object-view.h"
 #include "tracking-object-view.h"
 #include "gimbal.h"
-#include "object-to-watch.h"
+#include "calibration-data.h"
 #include "laser.h"
 #include "joystick.h"
 #include "rgb-led.h"
 #include "gps.h"
+#include "screen.h"
 
 boolean CalibrationView::calibrationDone = false;
 
 CalibrationView::CalibrationView(
-    TFT_eSPI *screen) : state(CALIBRATION_STATE_CALIBRATING),
-                        coordinatesRequestSent(false),
-                        polarisCoordsReceived(false),
-                        returnToObject(nullptr)
+    TFT_eSPI *screen,
+    int starIndex,
+    ObjectToWatch *returnToObject) : starIndex(starIndex),
+                                     returnToObject(returnToObject),
+                                     coordinatesRequestSent(false),
+                                     coordsReceived(false),
+                                     starApiAlt(0),
+                                     starApiAz(0),
+                                     angleBeforeAlt(0),
+                                     angleBeforeAz(0)
 {
     this->screen = screen;
+
+    // Star 0 without recalibration starts directly in CALIBRATING so the user
+    // manually points before any home is set.
+    // Star 0 with recalibration, and all subsequent stars, start by auto-moving.
+    if (starIndex == 0 && returnToObject == nullptr)
+        state = CALIBRATION_STATE_CALIBRATING;
+    else
+        state = CALIBRATION_STATE_RESTORING_POSITION;
 }
 
-CalibrationView::CalibrationView(
-    TFT_eSPI *screen, ObjectToWatch *returnToObject) : state(CALIBRATION_STATE_RESTORING_POSITION),
-                                                       coordinatesRequestSent(false),
-                                                       polarisCoordsReceived(false),
-                                                       returnToObject(returnToObject)
+void CalibrationView::drawHeader()
 {
-    this->screen = screen;
+    const String &name = CalibrationData::points[starIndex].star.label;
+    screen->setTextColor(TFT_WHITE, BACKGROUND_COLOR);
+    screen->setTextFont(2);
+
+    // Draw star name + progress in the lower right area (row 3, cols 3-5)
+    screen->fillRect(3 * BUTTON_SIZE, 3 * BUTTON_SIZE, 3 * BUTTON_SIZE, BUTTON_SIZE, BACKGROUND_COLOR);
+    screen->setCursor(3 * BUTTON_SIZE + 4, 3 * BUTTON_SIZE + 8);
+    screen->print(name);
+    screen->print(" (");
+    screen->print(starIndex + 1);
+    screen->print("/3)");
 }
 
 void CalibrationView::setup()
@@ -91,6 +113,8 @@ void CalibrationView::setup()
     {
         widget->init();
     }
+
+    drawHeader();
 }
 
 void CalibrationView::loop()
@@ -101,31 +125,42 @@ void CalibrationView::loop()
     {
         if (!coordinatesRequestSent)
         {
-            ObjectToWatch polaris("deep-space-objects", "* alf UMi", "Polaris");
-            NetworkQueue::sendComputeRequest(GPS::getDataSafe(), &polaris);
+            NetworkQueue::sendComputeRequest(GPS::getDataSafe(), &CalibrationData::points[starIndex].star);
             coordinatesRequestSent = true;
-            DEBUG_PRINTLN("CalibrationView: restoring Polaris position");
+
+            String msg;
+            msg += F("CalibrationView: fetching coords for ");
+            msg += CalibrationData::points[starIndex].star.label;
+            DEBUG_PRINTLN(msg);
         }
 
         EquatorialCoordinates coords;
-        if (!polarisCoordsReceived && NetworkQueue::tryGetCoordinates(coords))
+        if (!coordsReceived && NetworkQueue::tryGetCoordinates(coords))
         {
+            starApiAlt = coords.altitude;
+            starApiAz = coords.azimuth;
             Gimbal::altitudeMotor.goToAbsoluteAngle(coords.altitude);
             Gimbal::azimuthMotor.goToAbsoluteAngle(coords.azimuth * -1.0);
             Laser::on();
             RGBLed::green();
-            polarisCoordsReceived = true;
-            DEBUG_PRINTLN("CalibrationView: moving to Polaris");
+            coordsReceived = true;
+            DEBUG_PRINTLN("CalibrationView: moving to star position");
         }
 
-        if (polarisCoordsReceived &&
+        if (coordsReceived &&
             !Gimbal::altitudeMotor.isMoving() &&
             !Gimbal::azimuthMotor.isMoving())
         {
+            // Record motor angles before user fine-tunes (used for correction on stars 1 and 2)
+            if (starIndex > 0)
+            {
+                angleBeforeAlt = Gimbal::altitudeMotor.getCurrentAngle();
+                angleBeforeAz  = Gimbal::azimuthMotor.getCurrentAngle();
+            }
             coordinatesRequestSent = false;
-            polarisCoordsReceived = false;
+            coordsReceived = false;
             state = CALIBRATION_STATE_CALIBRATING;
-            DEBUG_PRINTLN("CalibrationView: at Polaris, ready to calibrate");
+            DEBUG_PRINTLN("CalibrationView: at star position, ready to calibrate");
         }
         break;
     }
@@ -160,10 +195,34 @@ void CalibrationView::loop()
         {
             Laser::off();
             RGBLed::off();
-            coordinatesRequestSent = false;
-            Gimbal::altitudeMotor.homingComplete = false;
-            Gimbal::azimuthMotor.homingComplete = false;
-            state = CALIBRATION_STATE_WAITING_COORDS;
+
+            if (starIndex == 0)
+            {
+                // First star: fetch API coords to compute the home offset
+                coordinatesRequestSent = false;
+                Gimbal::altitudeMotor.homingComplete = false;
+                Gimbal::azimuthMotor.homingComplete = false;
+                state = CALIBRATION_STATE_WAITING_COORDS;
+            }
+            else
+            {
+                // Stars 1 and 2: measure correction as the angular delta the
+                // user applied relative to the auto-moved reference position
+                float angleAfterAlt = Gimbal::altitudeMotor.getCurrentAngle();
+                float angleAfterAz  = Gimbal::azimuthMotor.getCurrentAngle();
+
+                CalibrationPoint point = CalibrationData::points[starIndex];
+                point.apiAlt = starApiAlt;
+                point.apiAz  = starApiAz;
+                point.correctionAlt = angleAfterAlt - angleBeforeAlt;
+                point.correctionAz  = -(angleAfterAz - angleBeforeAz);
+                CalibrationData::recordPoint(starIndex, point);
+
+                if (starIndex == 2)
+                    CalibrationData::computeCorrection();
+
+                state = CALIBRATION_STATE_DONE;
+            }
         }
         else
         {
@@ -179,21 +238,29 @@ void CalibrationView::loop()
 
     case CALIBRATION_STATE_WAITING_COORDS:
     {
+        // Only reached for starIndex == 0 to compute the home offset
         if (!coordinatesRequestSent)
         {
-            ObjectToWatch polaris("deep-space-objects", "* alf UMi", "Polaris");
-            NetworkQueue::sendComputeRequest(GPS::getDataSafe(), &polaris);
+            NetworkQueue::sendComputeRequest(GPS::getDataSafe(), &CalibrationData::points[0].star);
             coordinatesRequestSent = true;
-            DEBUG_PRINTLN("CalibrationView: waiting for Polaris coordinates");
+            DEBUG_PRINTLN("CalibrationView: waiting for home coords");
         }
 
         EquatorialCoordinates coords;
         if (NetworkQueue::tryGetCoordinates(coords))
         {
+            // Record star 0 with zero correction (it is the reference)
+            CalibrationPoint point = CalibrationData::points[0];
+            point.apiAlt = coords.altitude;
+            point.apiAz  = coords.azimuth;
+            point.correctionAlt = 0;
+            point.correctionAz  = 0;
+            CalibrationData::recordPoint(0, point);
+
             float altHome = coords.altitude * -1.0;
             float azHome = coords.azimuth > 180.0
-                               ? (360.0 - coords.azimuth) * -1.0
-                               : coords.azimuth * -1.0;
+                               ? coords.azimuth - 360.0
+                               : coords.azimuth;
             Gimbal::altitudeMotor.goToHome(altHome);
             Gimbal::azimuthMotor.goToHome(azHome);
             state = CALIBRATION_STATE_HOMING;
@@ -210,7 +277,16 @@ void CalibrationView::loop()
         break;
 
     case CALIBRATION_STATE_DONE:
-        if (returnToObject != nullptr)
+    {
+        if (starIndex < 2)
+        {
+            // Proceed to select the next calibration star
+            ObjectToWatch *ret = returnToObject;
+            returnToObject = nullptr;
+            CurrentViewService::changeCurrentView(
+                new ChooseCalibrationStarView(screen, starIndex + 1, ret));
+        }
+        else if (returnToObject != nullptr)
         {
             ObjectToWatch *obj = returnToObject;
             returnToObject = nullptr;
@@ -221,6 +297,7 @@ void CalibrationView::loop()
             CurrentViewService::changeCurrentView(new ChoosingObjectView(screen));
         }
         break;
+    }
     }
 }
 

@@ -2,7 +2,7 @@
 #include "colors.h"
 #include "wifi-connection.h"
 #include "current-view-service.h"
-#include "calibration-view.h"
+#include "choose-calibration-star-view.h"
 #include "gps.h"
 #include "screen.h"
 #include "joystick.h"
@@ -34,8 +34,8 @@ void SplashScreenView::loop()
     if (wifiStatus && gpsStatus && wiiMoteStatus)
     {
         CurrentViewService::changeCurrentView(
-            new CalibrationView(
-                this->screen));
+            new ChooseCalibrationStarView(
+                this->screen, 0, nullptr));
     }
     currentWifiStatus = wifiStatus;
     currentGPSStatus = gpsStatus;

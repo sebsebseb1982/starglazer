@@ -3,7 +3,7 @@
 #include "colors.h"
 #include "image-cog.h"
 #include "current-view-service.h"
-#include "calibration-view.h"
+#include "choose-calibration-star-view.h"
 #include "tracking-object-service.h"
 
 WidgetRecalibrateButton::WidgetRecalibrateButton(
@@ -65,5 +65,5 @@ void WidgetRecalibrateButton::manageTouchUp()
 {
     TrackingObjectService::isTracking = false;
     ObjectToWatch *obj = new ObjectToWatch(trackedObject->type, trackedObject->code, trackedObject->label);
-    CurrentViewService::changeCurrentView(new CalibrationView(screen, obj));
+    CurrentViewService::changeCurrentView(new ChooseCalibrationStarView(screen, 0, obj));
 }

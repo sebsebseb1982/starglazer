@@ -4,6 +4,7 @@
 #include "gimbal.h"
 #include "laser.h"
 #include "gps.h"
+#include "calibration-data.h"
 
 ObjectToWatch *TrackingObjectService::trackedObject = nullptr;
 EquatorialCoordinates TrackingObjectService::currentEquatorialCoordinates;
@@ -28,8 +29,14 @@ void TrackingObjectService::loop()
     if (NetworkQueue::tryGetCoordinates(newCoords))
     {
         currentEquatorialCoordinates = newCoords;
-        Gimbal::altitudeMotor.goToAbsoluteAngle(currentEquatorialCoordinates.altitude);
-        Gimbal::azimuthMotor.goToAbsoluteAngle(currentEquatorialCoordinates.azimuth * -1.0);
+        float corrAlt, corrAz;
+        CalibrationData::applyCorrection(
+            currentEquatorialCoordinates.altitude,
+            currentEquatorialCoordinates.azimuth,
+            corrAlt,
+            corrAz);
+        Gimbal::altitudeMotor.goToAbsoluteAngle(corrAlt);
+        Gimbal::azimuthMotor.goToAbsoluteAngle(corrAz * -1.0);
         pendingCoordinatesRequest = false;
     }
 

@@ -21,14 +21,22 @@ private:
   TFT_eSPI *screen;
   std::list<Widget *> widgets;
   CalibrationState state;
-  bool coordinatesRequestSent;
-  bool polarisCoordsReceived;
+  int starIndex;
   ObjectToWatch *returnToObject;
+  bool coordinatesRequestSent;
+  bool coordsReceived;
+  float starApiAlt;
+  float starApiAz;
+  float angleBeforeAlt;
+  float angleBeforeAz;
+
+  void drawHeader();
 
 public:
   static boolean calibrationDone;
-  CalibrationView(TFT_eSPI *screen);
-  CalibrationView(TFT_eSPI *screen, ObjectToWatch *returnToObject);
+  // starIndex: 0 = first star (sets home reference), 1 or 2 = subsequent stars (measure correction)
+  // returnToObject: non-null when recalibrating from TrackingObjectView
+  CalibrationView(TFT_eSPI *screen, int starIndex, ObjectToWatch *returnToObject);
   ~CalibrationView();
   void setup();
   void loop();
