@@ -139,10 +139,10 @@ void CalibrationView::loop()
         {
             starApiAlt = coords.altitude;
             starApiAz = coords.azimuth;
+            Laser::off();
+            RGBLed::blue();
             Gimbal::altitudeMotor.goToAbsoluteAngle(coords.altitude);
             Gimbal::azimuthMotor.goToAbsoluteAngle(coords.azimuth * -1.0);
-            Laser::on();
-            RGBLed::green();
             coordsReceived = true;
             DEBUG_PRINTLN("CalibrationView: moving to star position");
         }
